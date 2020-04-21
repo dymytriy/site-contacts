@@ -1,0 +1,204 @@
+.site-contacts
+{
+	margin: 0em 0em 1em 0em;
+}
+
+.site-contacts-row
+{
+	margin: 0px -15px;
+}
+
+.site-contacts-row::after
+{
+	content: " ";
+	display: block;
+	clear: both;
+}
+
+.site-contacts-fullwidth
+{
+	box-sizing: border-box;
+	padding: 0px 15px;
+}
+
+.site-contacts-half
+{
+	float: left;
+	width: 50%;
+	box-sizing: border-box;
+	padding: 0px 15px;
+}
+
+.site-contacts-message-block
+{
+	padding: 0em;
+	margin: 0em;
+}
+
+.site-contacts-message-success
+{
+	padding: 1.4em;
+	margin: 0em;
+	line-height: 2em;
+	background: rgba(190, 255, 190, 0.2);
+	border: 2px solid #90e090;
+}
+
+.site-contacts-submission-status
+{
+	padding: 0em;
+	margin: 0em;
+}
+
+.site-contacts-submission-error
+{
+	padding: 1.4em;
+	margin: 0em;
+	line-height: 2em;
+	background: rgba(255, 190, 190, 0.2);
+	border: 2px solid #e09090;
+}
+
+.site-contacts-title
+{
+	font-size: 130%;
+	font-weight: bold;
+	margin: 0em 0em 0.5em 0em;
+	padding: 0em;
+}
+
+.site-contacts-field
+{
+	font-size: 100%;
+	margin: 0em 0em 1em 0em;
+	padding: 0em;
+}
+
+.site-contacts-field .site-contacts-row
+{
+	margin-bottom: 1em;
+}
+
+.site-contacts-field .site-contacts-row:last-child
+{
+	margin-bottom: 0em;
+}
+
+.site-contacts-field input.site-contacts-input-text,
+.site-contacts-field input.site-contacts-input-tel,
+.site-contacts-field input.site-contacts-input-email,
+.site-contacts-field input.site-contacts-input-url
+{
+	box-sizing: border-box;
+}
+
+.site-contacts-field textarea.site-contacts-textarea
+{
+	box-sizing: border-box;
+	min-height: 180px;
+}
+
+.site-contacts-field-fullwidth input.site-contacts-input-text,
+.site-contacts-field-fullwidth input.site-contacts-input-tel,
+.site-contacts-field-fullwidth input.site-contacts-input-email,
+.site-contacts-field-fullwidth input.site-contacts-input-url,
+.site-contacts-field-fullwidth textarea.site-contacts-textarea
+{
+	width: 100%;
+}
+
+.site-contacts-field-label
+{
+	margin: 0em 0em 0.5em 0em;
+	padding: 0em;
+	font-weight: bold;
+}
+
+.site-contacts-field-option input
+{
+	margin: 0em 0.5em 0em 0em;
+}
+
+.site-contacts-field-error-container
+{
+	margin: 0.5em 0em 0em 0em;
+}
+
+.site-contacts-field-error
+{
+	color: #e03030;
+}
+
+.site-contacts-field-submit-button .site-contacts-field-body input
+{
+	vertical-align: middle;
+}
+
+span.site-contacts-field-required
+{
+	color: #e02020;
+	margin: 0em 0em 0em 0.2em;
+}
+
+.site-contacts-spinner
+{
+	margin: 0em 0em 0em 1em;
+	overflow: hidden;
+	vertical-align: middle;
+	display: inline-block;
+	position: relative;
+	-webkit-transform: translateZ(0);
+	-ms-transform: translateZ(0);
+	transform: translateZ(0);
+	-webkit-animation-delay: -0.16s;
+	animation-delay: -0.16s;
+}
+
+.site-contacts-spin-elem
+{
+	display: block;
+	float: left;
+	margin: 0.3em 0.5em 0.3em 0em;
+	border-radius: 50%;
+	border: 2px solid #808080;
+	width: 1em;
+	height: 1em;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+	-webkit-animation: site-contacts-spin-frames 1.8s infinite ease-in-out;
+	animation: site-contacts-spin-frames 1.8s infinite ease-in-out;
+}
+
+.site-contacts-spin-elem:first-child
+{
+	-webkit-animation-delay: -0.32s;
+	animation-delay: -0.32s;
+}
+
+@-webkit-keyframes site-contacts-spin-frames
+{
+	0%,
+	80%,
+	100%
+	{
+		background: #888888;
+	}
+	40%
+	{
+		background: #eeeeee;
+	}
+}
+
+@keyframes site-contacts-spin-frames
+{
+	0%,
+	80%,
+	100%
+	{
+		background: #888888;
+	}
+	40%
+	{
+		background: #eeeeee;
+	}
+}
