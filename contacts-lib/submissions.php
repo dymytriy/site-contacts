@@ -1,24 +1,18 @@
 <?php
 
-if (!defined('ABSPATH'))
-{
+if (!defined('ABSPATH')) {
 	exit;
 }
 
-function site_contacts_save_regular($new_data_id, $contact_form, $fields_info, $indexed_titles)
-{
+function site_contacts_save_regular($new_data_id, $contact_form, $fields_info, $indexed_titles) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
 
-	if (!empty($fields_info) && is_array($fields_info))
-	{
-		foreach ($fields_info as $field)
-		{
-			if (!empty($field['type']))
-			{
-				switch ($field['type'])
-				{
+	if (!empty($fields_info) && is_array($fields_info)) {
+		foreach ($fields_info as $field) {
+			if (!empty($field['type'])) {
+				switch ($field['type']) {
 					case SITE_CONTACTS_FIELD_TEXTFIELD:
 					case SITE_CONTACTS_FIELD_PHONE:
 					case SITE_CONTACTS_FIELD_EMAIL:
@@ -60,10 +54,8 @@ function site_contacts_save_regular($new_data_id, $contact_form, $fields_info, $
 
 						$new_data_field_id = $wpdb->insert_id;
 
-						if (!empty($field['entries']) && is_array($field['entries']))
-						{
-							foreach ($field['entries'] as $entry)
-							{
+						if (!empty($field['entries']) && is_array($field['entries'])) {
+							foreach ($field['entries'] as $entry) {
 								$wpdb->query($wpdb->prepare('
 									INSERT INTO `' . $table_prefix . 'data_entries`
 										(`data_id`, `data_field_id`, `form_id`, `field_id`, `entry_id`, `type`, `weight`, `value`, `content`, `config`)
@@ -87,8 +79,7 @@ function site_contacts_save_regular($new_data_id, $contact_form, $fields_info, $
 	}
 }
 
-function site_contacts_save_submission($contact_form, $fields_info)
-{
+function site_contacts_save_submission($contact_form, $fields_info) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -114,10 +105,8 @@ function site_contacts_save_submission($contact_form, $fields_info)
 
 	$indexed_titles = array();
 
-	foreach ($field_titles as $title)
-	{
-		if (!empty($title['field_id']))
-		{
+	foreach ($field_titles as $title) {
+		if (!empty($title['field_id'])) {
 			$indexed_titles[$title['field_id']] = $title;
 		}
 	}
@@ -125,8 +114,7 @@ function site_contacts_save_submission($contact_form, $fields_info)
 	site_contacts_save_regular($new_data_id, $contact_form, $fields_info, $indexed_titles);
 }
 
-function site_contacts_submissions_count($form_id)
-{
+function site_contacts_submissions_count($form_id) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -135,8 +123,7 @@ function site_contacts_submissions_count($form_id)
 		'SELECT COUNT(id) FROM `' . $table_prefix . 'data` WHERE form_id = %d;', intval($form_id)));
 }
 
-function site_contacts_submissions($form_id, $current_page, $items_per_page)
-{
+function site_contacts_submissions($form_id, $current_page, $items_per_page) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -149,14 +136,11 @@ function site_contacts_submissions($form_id, $current_page, $items_per_page)
 		ORDER BY created DESC
 		LIMIT %d, %d;', intval($form_id), $current_page * $items_per_page, $items_per_page), ARRAY_A);
 
-	if (!empty($data))
-	{
+	if (!empty($data)) {
 		$submissions = array();
 
-		foreach ($data as $item)
-		{
-			if (!empty($item['id']))
-			{
+		foreach ($data as $item) {
+			if (!empty($item['id'])) {
 				$submissions[$item['id']] = $item;
 			}
 		}
@@ -169,14 +153,10 @@ function site_contacts_submissions($form_id, $current_page, $items_per_page)
 			ON data.id = data_fields.data_id
 			ORDER BY data.id ASC;', intval($form_id), $current_page * $items_per_page, $items_per_page), ARRAY_A);
 
-		if (!empty($fields))
-		{
-			foreach ($fields as $item)
-			{
-				if ((!empty($item['id'])) && (!empty($item['field_id'])))
-				{
-					if (!empty($submissions[$item['id']]))
-					{
+		if (!empty($fields)) {
+			foreach ($fields as $item) {
+				if ((!empty($item['id'])) && (!empty($item['field_id']))) {
+					if (!empty($submissions[$item['id']])) {
 						$submissions[$item['id']]['fields'][$item['field_id']] = $item;
 					}
 				}
@@ -190,14 +170,10 @@ function site_contacts_submissions($form_id, $current_page, $items_per_page)
 				ON data.id = data_entries.data_id
 				ORDER BY data.id ASC;', intval($form_id), $current_page * $items_per_page, $items_per_page), ARRAY_A);
 
-			if (!empty($field_entries))
-			{
-				foreach ($field_entries as $item)
-				{
-					if ((!empty($item['id'])) && (!empty($item['field_id'])) && (!empty($item['entry_id'])))
-					{
-						if (!empty($submissions[$item['id']]['fields'][$item['field_id']]))
-						{
+			if (!empty($field_entries)) {
+				foreach ($field_entries as $item) {
+					if ((!empty($item['id'])) && (!empty($item['field_id'])) && (!empty($item['entry_id']))) {
+						if (!empty($submissions[$item['id']]['fields'][$item['field_id']])) {
 							$submissions[$item['id']]['fields'][$item['field_id']]['entries'][$item['entry_id']] = $item;
 						}
 					}
@@ -211,8 +187,7 @@ function site_contacts_submissions($form_id, $current_page, $items_per_page)
 	return null;
 }
 
-function site_contacts_delete_submission($data_id)
-{
+function site_contacts_delete_submission($data_id) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -222,8 +197,7 @@ function site_contacts_delete_submission($data_id)
 	$wpdb->query($wpdb->prepare('DELETE FROM `' . $table_prefix . 'data_fields` WHERE data_id = %d;', intval($data_id)));
 }
 
-function site_contacts_get_data($data_id)
-{
+function site_contacts_get_data($data_id) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -234,20 +208,16 @@ function site_contacts_get_data($data_id)
 		WHERE id = %d
 		LIMIT 1;', intval($data_id)), ARRAY_A);
 
-	if (!empty($data))
-	{
+	if (!empty($data)) {
 		// Get list of fields for current data entry
 		$fields = $wpdb->get_results($wpdb->prepare('
 			SELECT data_id, field_id, type, weight, label, value, content FROM `' . $table_prefix . 'data_fields`
 			WHERE data_id = %d
 			ORDER BY weight ASC;', intval($data_id)), ARRAY_A);
 
-		if (!empty($fields))
-		{
-			foreach ($fields as $item)
-			{
-				if (!empty($item['field_id']))
-				{
+		if (!empty($fields)) {
+			foreach ($fields as $item) {
+				if (!empty($item['field_id'])) {
 					$data['fields'][$item['field_id']] = $item;
 				}
 			}
@@ -258,14 +228,10 @@ function site_contacts_get_data($data_id)
 				WHERE data_id = %d
 				ORDER BY weight ASC;', intval($data_id)), ARRAY_A);
 
-			if (!empty($field_entries))
-			{
-				foreach ($field_entries as $item)
-				{
-					if ((!empty($item['field_id'])) && (!empty($item['entry_id'])))
-					{
-						if (!empty($data['fields'][$item['field_id']]))
-						{
+			if (!empty($field_entries)) {
+				foreach ($field_entries as $item) {
+					if ((!empty($item['field_id'])) && (!empty($item['entry_id']))) {
+						if (!empty($data['fields'][$item['field_id']])) {
 							$data['fields'][$item['field_id']]['entries'][$item['entry_id']] = $item;
 						}
 					}
@@ -279,12 +245,9 @@ function site_contacts_get_data($data_id)
 	return null;
 }
 
-function site_contacts_submissions_preview($entry, $field)
-{
-	if (!empty($field['field_id']))
-	{
-		switch ($field['type'])
-		{
+function site_contacts_submissions_preview($entry, $field) {
+	if (!empty($field['field_id'])) {
+		switch ($field['type']) {
 			case SITE_CONTACTS_FIELD_TEXTFIELD:
 			case SITE_CONTACTS_FIELD_PHONE:
 			case SITE_CONTACTS_FIELD_EMAIL:
@@ -293,8 +256,7 @@ function site_contacts_submissions_preview($entry, $field)
 			case SITE_CONTACTS_FIELD_RADIOBOXES:
 			case SITE_CONTACTS_FIELD_URL:
 
-				if (!empty($entry['fields'][$field['field_id']]['content']))
-				{
+				if (!empty($entry['fields'][$field['field_id']]['content'])) {
 					echo esc_html($entry['fields'][$field['field_id']]['content']);
 				}
 
@@ -303,14 +265,11 @@ function site_contacts_submissions_preview($entry, $field)
 			case SITE_CONTACTS_FIELD_CHECKBOXES:
 
 				if ((!empty($entry['fields'][$field['field_id']]['entries'])) &&
-					(is_array($entry['fields'][$field['field_id']]['entries'])))
-				{
+					(is_array($entry['fields'][$field['field_id']]['entries']))) {
 					$index = 0;
 
-					foreach ($entry['fields'][$field['field_id']]['entries'] as $item_entry)
-					{
-						if ($index > 0)
-						{
+					foreach ($entry['fields'][$field['field_id']]['entries'] as $item_entry) {
+						if ($index > 0) {
 							echo ', ';
 						}
 
@@ -325,29 +284,22 @@ function site_contacts_submissions_preview($entry, $field)
 	}
 }
 
-function site_contacts_submissions_list($submissions_list_url)
-{
+function site_contacts_submissions_list($submissions_list_url) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
 
 	$contact_form_id = 0;
 
-	if ((!empty($_POST['site_contacts_select_form'])) && ($_POST['site_contacts_select_form'] == 'yes'))
-	{
-		if (!empty($_POST['site_contacts_contact_form']))
-		{
+	if ((!empty($_POST['site_contacts_select_form'])) && ($_POST['site_contacts_select_form'] == 'yes')) {
+		if (!empty($_POST['site_contacts_contact_form'])) {
 			$contact_form_id = intval($_POST['site_contacts_contact_form']);
-		}
-		else
-		{
+		} else {
 			$contact_form_id = 0;
 		}
 
 		update_option('site_contacts_submissions_form', $contact_form_id);
-	}
-	else
-	{
+	} else {
 		$contact_form_id = get_option('site_contacts_submissions_form', 0);
 	}
 
@@ -355,35 +307,28 @@ function site_contacts_submissions_list($submissions_list_url)
 	$contacts = site_contacts_get_all();
 
 	// Check if contact form exists
-	if ($contacts && count($contacts) > 0)
-	{
+	if ($contacts && count($contacts) > 0) {
 		$found_form = false;
 
-		foreach ($contacts as $item)
-		{
-			if ($item['id'] == $contact_form_id)
-			{
+		foreach ($contacts as $item) {
+			if ($item['id'] == $contact_form_id) {
 				$found_form = true;
 
 				break;
 			}
 		}
 
-		if ($found_form == false)
-		{
+		if ($found_form == false) {
 			// No contact form found, invalidate the id
 			$contact_form_id = 0;
 		}
-	}
-	else
-	{
+	} else {
 		// No contact forms found, invalidate the id
 		$contact_form_id = 0;
 	}
 
 	// Try to get first available form
-	if ($contact_form_id <= 0)
-	{
+	if ($contact_form_id <= 0) {
 		// Get first available form
 		$contact_form_id = $wpdb->get_var('SELECT id FROM `' . $table_prefix . 'forms` ORDER BY id ASC LIMIT 1;');
 	}
@@ -394,10 +339,8 @@ function site_contacts_submissions_list($submissions_list_url)
 	<div class="site-contacts-text">
 <?php
 
-	if ($contact_form_id > 0)
-	{
-		if ($contacts && count($contacts) > 0)
-		{
+	if ($contact_form_id > 0) {
+		if ($contacts && count($contacts) > 0) {
 
 ?>
 		<form method="post">
@@ -407,16 +350,12 @@ function site_contacts_submissions_list($submissions_list_url)
 				<select class="site-contacts-select site-contacts-wide" name="site_contacts_contact_form" onchange="this.form.submit()">
 <?php
 
-			foreach ($contacts as $item)
-			{
+			foreach ($contacts as $item) {
 				$item_title = '';
 
-				if (!empty($item['title']))
-				{
+				if (!empty($item['title'])) {
 					$item_title = __('ID #', 'site-contacts') . $item['id'] . ': ' . esc_html($item['title']);
-				}
-				else
-				{
+				} else {
 					$item_title = __('ID #', 'site-contacts') . $item['id'] . ': ' . __('(No title)', 'site-contacts');
 				}
 
@@ -439,13 +378,11 @@ function site_contacts_submissions_list($submissions_list_url)
 		$current_page = 1;
 		$total_pages = floor($total_items / $items_per_page);
 
-		if (($total_items % $items_per_page) > 0)
-		{
+		if (($total_items % $items_per_page) > 0) {
 			$total_pages++;
 		}
 
-		if (!empty($_GET['subpage']))
-		{
+		if (!empty($_GET['subpage'])) {
 			$current_page = intval($_GET['subpage']);
 		}
 
@@ -471,8 +408,7 @@ function site_contacts_submissions_list($submissions_list_url)
 
 		$page_links = paginate_links($pagelink_args);
 
-		if (!empty($page_links))
-		{
+		if (!empty($page_links)) {
 
 ?>
 		<p><?php echo $page_links ?></p>
@@ -495,17 +431,13 @@ function site_contacts_submissions_list($submissions_list_url)
 					<th><?php _e('Created', 'site-contacts'); ?></th>
 <?php
 
-				foreach ($fields as $item)
-				{
+				foreach ($fields as $item) {
 ?>
 					<th><?php
 
-					if (!empty($item['label']))
-					{
+					if (!empty($item['label'])) {
 						echo esc_html($item['label']);
-					}
-					else
-					{
+					} else {
 						echo __('(No title)', 'site-contacts');
 					}
 
@@ -518,8 +450,7 @@ function site_contacts_submissions_list($submissions_list_url)
 				</tr>
 <?php
 
-		if (empty($submissions) || !is_array($submissions) || (count($submissions) <= 0))
-		{
+		if (empty($submissions) || !is_array($submissions) || (count($submissions) <= 0)) {
 
 ?>
 				<tr>
@@ -527,11 +458,8 @@ function site_contacts_submissions_list($submissions_list_url)
 				</tr>
 <?php
 
-		}
-		else
-		{
-			foreach ($submissions as $entry)
-			{
+		} else {
+			foreach ($submissions as $entry) {
 
 ?>
 				<tr>
@@ -539,8 +467,7 @@ function site_contacts_submissions_list($submissions_list_url)
 					<td><?php echo site_contacts_local_time($entry['created']) ?></td>
 <?php
 
-				foreach ($fields as $item)
-				{
+				foreach ($fields as $item) {
 
 ?>
 					<td>
@@ -569,62 +496,50 @@ function site_contacts_submissions_list($submissions_list_url)
 
 		$page_links = paginate_links($pagelink_args);
 
-		if (!empty($page_links))
-		{
+		if (!empty($page_links)) {
 
 ?>
 		<p><?php echo $page_links ?></p>
 <?php
 
 		}
-	}
-	else
-	{
+	} else {
 
 ?>
 		<p><?php _e('No contact forms found.', 'site-contacts'); ?></p>
 <?php
 
 	}
-	
+
 ?>
 	</div>
 </div>
 <?php
 }
 
-function site_contacts_submissions_field($field)
-{
-	switch ($field['type'])
-	{
+function site_contacts_submissions_field($field) {
+	switch ($field['type']) {
 		case SITE_CONTACTS_FIELD_TEXTFIELD:
 		case SITE_CONTACTS_FIELD_PHONE:
 		case SITE_CONTACTS_FIELD_EMAIL:
 		case SITE_CONTACTS_FIELD_DROPDOWN:
 		case SITE_CONTACTS_FIELD_TEXTAREA:
 		case SITE_CONTACTS_FIELD_RADIOBOXES:
-		case SITE_CONTACTS_FIELD_URL:
-		{
+		case SITE_CONTACTS_FIELD_URL: {
 ?>
 	<p><label><strong><?php
 
-			if (empty($field['label']))
-			{
+			if (empty($field['label'])) {
 				echo __('(No field label)', 'site-contacts');
-			}
-			else
-			{
+			} else {
 				echo esc_html($field['label']);
 			}
 
 ?>:</strong></label><br/><?php
 
-			if (empty($field['content']))
-			{
+			if (empty($field['content'])) {
 				echo __('(Empty)', 'site-contacts');
-			}
-			else
-			{
+			} else {
 				echo esc_html($field['content']);
 			}
 ?></p>
@@ -632,36 +547,26 @@ function site_contacts_submissions_field($field)
 		}
 		break;
 
-		case SITE_CONTACTS_FIELD_CHECKBOXES:
-		{
+		case SITE_CONTACTS_FIELD_CHECKBOXES: {
 ?>
 	<p><label><strong><?php
 
-			if (empty($field['label']))
-			{
+			if (empty($field['label'])) {
 				echo __('(No field label)', 'site-contacts');
-			}
-			else
-			{
+			} else {
 				echo esc_html($field['label']);
 			}
 
 ?>:</strong></label><br/><?php
 
-			if ((!empty($field['entries'])) && (is_array($field['entries'])) && (count($field['entries']) > 0))
-			{
+			if ((!empty($field['entries'])) && (is_array($field['entries'])) && (count($field['entries']) > 0)) {
 				$entries = $field['entries'];
 
-				usort($entries, function($item1, $item2)
-				{
-					if (isset($item1['weight']) && isset($item2['weight']))
-					{
-						if ($item1['weight'] < $item2['weight'])
-						{
+				usort($entries, function($item1, $item2) {
+					if (isset($item1['weight']) && isset($item2['weight'])) {
+						if ($item1['weight'] < $item2['weight']) {
 							return -1;
-						}
-						else if ($item1['weight'] > $item2['weight'])
-						{
+						} else if ($item1['weight'] > $item2['weight']) {
 							return 1;
 						}
 
@@ -671,10 +576,8 @@ function site_contacts_submissions_field($field)
 
 				$index = 0;
 
-				foreach ($entries as $item_entry)
-				{
-					if ($index > 0)
-					{
+				foreach ($entries as $item_entry) {
+					if ($index > 0) {
 						echo ', ';
 					}
 
@@ -682,9 +585,7 @@ function site_contacts_submissions_field($field)
 
 					$index++;
 				}
-			}
-			else
-			{
+			} else {
 				echo __('(Empty)', 'site-contacts');
 			}
 ?></p>
@@ -694,8 +595,7 @@ function site_contacts_submissions_field($field)
 	}
 }
 
-function site_contacts_submission_form($show_submission_list, $submission)
-{
+function site_contacts_submission_form($show_submission_list, $submission) {
 	$fields = null;
 
 ?>
@@ -704,32 +604,23 @@ function site_contacts_submission_form($show_submission_list, $submission)
 	<div class="site-contacts-text">
 	<p><label><strong><?php echo __('Title', 'site-contacts') ?>:</strong></label><br/><?php
 
-	if (empty($submission['title']))
-	{
+	if (empty($submission['title'])) {
 		echo __('(No title)', 'site-contacts');
-	}
-	else
-	{
+	} else {
 		echo esc_html($submission['title']);
 	}
-	
+
 	?></p>
 <?php
 
-	if ((!empty($submission['fields'])) && (is_array($submission['fields'])))
-	{
+	if ((!empty($submission['fields'])) && (is_array($submission['fields']))) {
 		$fields = $submission['fields'];
 
-		usort($fields, function($item1, $item2)
-		{
-			if (isset($item1['weight']) && isset($item2['weight']))
-			{
-				if ($item1['weight'] < $item2['weight'])
-				{
+		usort($fields, function($item1, $item2) {
+			if (isset($item1['weight']) && isset($item2['weight'])) {
+				if ($item1['weight'] < $item2['weight']) {
 					return -1;
-				}
-				else if ($item1['weight'] > $item2['weight'])
-				{
+				} else if ($item1['weight'] > $item2['weight']) {
 					return 1;
 				}
 
@@ -737,13 +628,10 @@ function site_contacts_submission_form($show_submission_list, $submission)
 			}
 		});
 
-		foreach ($fields as $item)
-		{
+		foreach ($fields as $item) {
 			site_contacts_submissions_field($item);
 		}
-	}
-	else
-	{
+	} else {
 ?>
 		<p><?php _e('Currently, you do not have any field data for this submission.', 'site-contacts'); ?></p>
 <?php
@@ -755,8 +643,7 @@ function site_contacts_submission_form($show_submission_list, $submission)
 <?php
 }
 
-function site_contacts_submissions_page()
-{
+function site_contacts_submissions_page() {
 	$submissions_list_url = add_query_arg(array('page' => SITE_CONTACTS_SUBMISSIONS_PAGE), strtok($_SERVER['REQUEST_URI'], '?'));
 
 	$show_submission_list = true;
@@ -765,17 +652,13 @@ function site_contacts_submissions_page()
 <h1><?php _e('Submissions', 'site-contacts'); ?></h1>
 <?php
 
-	if (!empty($_GET['view']))
-	{
+	if (!empty($_GET['view'])) {
 		// Loading existing data if we are viewing submission
 		$submission = site_contacts_get_data($_GET['view']);
 
-		if (!empty($submission))
-		{
+		if (!empty($submission)) {
 			$show_submission_list = site_contacts_submission_form($show_submission_list, $submission);
-		}
-		else
-		{
+		} else {
 
 ?>
 <h3><?php _e('Recent submissions for your contact forms.', 'site-contacts'); ?></h3>
@@ -789,16 +672,12 @@ function site_contacts_submissions_page()
 		}
 	}
 
-	if ($show_submission_list)
-	{
+	if ($show_submission_list) {
 		// Delete submisssion if user wants that
-		if (!empty($_GET['delete']))
-		{
+		if (!empty($_GET['delete'])) {
 			site_contacts_delete_submission($_GET['delete']);
 		}
 
 		site_contacts_submissions_list($submissions_list_url);
 	}
 }
-
-?>

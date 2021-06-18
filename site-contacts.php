@@ -64,19 +64,16 @@ add_action('media_buttons', 'site_contacts_media_buttons');
 register_activation_hook(__FILE__, 'site_contacts_activate');
 register_uninstall_hook(__FILE__, 'site_contacts_uninstall');
 
-if (is_multisite())
-{
+if (is_multisite()) {
 	add_action('wpmu_new_blog', 'site_contacts_wpmu_new_blog', 10, 6);
 	add_filter('wpmu_drop_tables', 'site_contacts_wpmu_drop_tables', 10, 1);
 }
 
-function site_contacts_init()
-{
+function site_contacts_init() {
 	add_shortcode(SITE_CONTACTS_FORM_SHORTCODE, 'site_contacts_show');
 }
 
-function site_contacts_register_pages()
-{
+function site_contacts_register_pages() {
 	add_menu_page(
 		__('Site Contacts', 'site-contacts'),
 		__('Contacts', 'site-contacts'),
@@ -111,21 +108,17 @@ function site_contacts_register_pages()
 		'site_contacts_settings_page');
 }
 
-function site_contacts_admin_scripts($name)
-{
+function site_contacts_admin_scripts($name) {
 	// Register plugin stylesheet file
-	if (stripos($name, SITE_CONTACTS_ADMIN_PAGE) !== FALSE)
-	{
+	if (stripos($name, SITE_CONTACTS_ADMIN_PAGE) !== FALSE) {
 		wp_register_style('site_contacts_admin_style', plugins_url('css/admin-style.css', __FILE__), array(), SITE_CONTACTS_VERSION);
 		wp_register_script('site_contacts_admin_script', plugins_url('js/management.js', __FILE__),
 			array('jquery','jquery-ui-core','jquery-ui-droppable','jquery-ui-draggable','jquery-ui-sortable'), SITE_CONTACTS_VERSION);
 
 		wp_enqueue_style('site_contacts_admin_style');
 		wp_enqueue_script('site_contacts_admin_script');
-	}
-	else if ((stripos($name, SITE_CONTACTS_SETTINGS_PAGE) !== FALSE) ||
-				(stripos($name, SITE_CONTACTS_SUBMISSIONS_PAGE) !== FALSE))
-	{
+	} else if ((stripos($name, SITE_CONTACTS_SETTINGS_PAGE) !== FALSE) ||
+			(stripos($name, SITE_CONTACTS_SUBMISSIONS_PAGE) !== FALSE)) {
 		wp_register_style('site_contacts_admin_style', plugins_url('css/admin-style.css', __FILE__), array(), SITE_CONTACTS_VERSION);
 		wp_register_script('site_contacts_admin_script', plugins_url('js/management.js', __FILE__), array('jquery'), SITE_CONTACTS_VERSION);
 
@@ -134,8 +127,7 @@ function site_contacts_admin_scripts($name)
 	}
 }
 
-function site_contacts_enqueue_scripts()
-{
+function site_contacts_enqueue_scripts() {
 	wp_register_style('site_contacts_style', plugins_url('/css/contact-form.css' , __FILE__), array(), SITE_CONTACTS_VERSION);
 	wp_register_script('site_contacts_script', plugins_url('/js/contact-form.js' , __FILE__), array('jquery'), SITE_CONTACTS_VERSION);
 
@@ -143,8 +135,7 @@ function site_contacts_enqueue_scripts()
 	wp_enqueue_script('site_contacts_script');
 }
 
-function site_contacts_info_bar()
-{
+function site_contacts_info_bar() {
 ?>
 <div class="site-contacts-bar">
 	<div class="site-contacts-widget">
@@ -159,43 +150,35 @@ function site_contacts_info_bar()
 <?php
 }
 
-function site_contacts_submit()
-{
+function site_contacts_submit() {
 	$result = array();
 
 	if (	!empty($_POST['site_contacts_form_id']) &&
 			!empty($_POST['site_contacts_fields']) &&
-			is_array($_POST['site_contacts_fields']))
-	{
+			is_array($_POST['site_contacts_fields'])) {
 		$contact_form = site_contacts_get($_POST['site_contacts_form_id']);
 
 		// Validate form id
-		if (!empty($contact_form))
-		{
+		if (!empty($contact_form)) {
 			$fields_info = site_contacts_submitted_fields($contact_form);
 
 			$submission_errors = site_contacts_validate_data($contact_form, $fields_info);
 
-			if (!empty($submission_errors) && is_array($submission_errors) && (count($submission_errors) > 0))
-			{
+			if (!empty($submission_errors) && is_array($submission_errors) && (count($submission_errors) > 0)) {
 				$result['status'] = 'error';
 				$result['code'] = 'validation_failed';
 
-				if (!empty($submission_errors))
-				{
+				if (!empty($submission_errors)) {
 					$result['fields'] = $submission_errors;
 				}
 
 				echo json_encode($result);
 
 				exit;
-			}
-			else
-			{
+			} else {
 				site_contacts_save_submission($contact_form, $fields_info);
 
-				if (site_contacts_notify($contact_form, $fields_info))
-				{
+				if (site_contacts_notify($contact_form, $fields_info)) {
 					// Status code
 					$result['status'] = 'success';
 
@@ -215,16 +198,14 @@ function site_contacts_submit()
 	exit;
 }
 
-function site_contacts_media_buttons($editor_id = 'content')
-{
+function site_contacts_media_buttons($editor_id = 'content') {
 	printf( '<button type="button" class="button site-contacts-media-insert" data-editor="%s">%s</button>',
 		esc_attr( $editor_id ),
 		__( 'Contact Form' )
 	);
 }
 
-function site_contacts_enqueue_media()
-{
+function site_contacts_enqueue_media() {
 	wp_register_script('site_contacts_media_script', plugins_url('js/media.js', __FILE__), array('jquery'), SITE_CONTACTS_VERSION);
 	wp_enqueue_script('site_contacts_media_script');
 
@@ -234,22 +215,17 @@ function site_contacts_enqueue_media()
 	add_action('admin_footer', 'site_contacts_media_inline');
 }
 
-function site_contacts_activate($networkwide)
-{
+function site_contacts_activate($networkwide) {
 	global $wpdb;
 
-	if (is_multisite())
-	{
-		if ($networkwide)
-		{
+	if (is_multisite()) {
+		if ($networkwide) {
 			$old_blog = $wpdb->blogid;
 
 			$blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
 
-			if ($blogids && (!empty($blogids)))
-			{
-				foreach ($blogids as $blog_id)
-				{
+			if ($blogids && (!empty($blogids))) {
+				foreach ($blogids as $blog_id) {
 					switch_to_blog($blog_id);
 
 					site_contacts_create_db();
@@ -265,20 +241,16 @@ function site_contacts_activate($networkwide)
 	site_contacts_create_db();
 }
 
-function site_contacts_uninstall()
-{
+function site_contacts_uninstall() {
 	global $wpdb;
 
-	if (is_multisite())
-	{
+	if (is_multisite()) {
 		$old_blog = $wpdb->blogid;
 
 		$blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
 
-		if ($blogids && (!empty($blogids)))
-		{
-			foreach ($blogids as $blog_id)
-			{
+		if ($blogids && (!empty($blogids))) {
+			foreach ($blogids as $blog_id) {
 				switch_to_blog($blog_id);
 
 				site_contacts_check_removal_state();
@@ -293,12 +265,10 @@ function site_contacts_uninstall()
 	site_contacts_check_removal_state();
 }
 
-function site_contacts_wpmu_new_blog($blog_id, $user_id, $domain, $path, $site_id, $meta)
-{
+function site_contacts_wpmu_new_blog($blog_id, $user_id, $domain, $path, $site_id, $meta) {
 	global $wpdb;
 
-	if (is_plugin_active_for_network(basename(dirname(__FILE__)) . '/' . basename(__FILE__)))
-	{
+	if (is_plugin_active_for_network(basename(dirname(__FILE__)) . '/' . basename(__FILE__))) {
 		$old_blog = $wpdb->blogid;
 
 		switch_to_blog($blog_id);
@@ -309,8 +279,7 @@ function site_contacts_wpmu_new_blog($blog_id, $user_id, $domain, $path, $site_i
 	}
 }
 
-function site_contacts_wpmu_drop_tables($tables)
-{
+function site_contacts_wpmu_drop_tables($tables) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -325,15 +294,11 @@ function site_contacts_wpmu_drop_tables($tables)
 	return $tables;
 }
 
-function site_contacts_check_removal_state()
-{
+function site_contacts_check_removal_state() {
 	// Drop all tables in case if user wants to remove all information
-	if (get_option('site_contacts_remove_db', false))
-	{
+	if (get_option('site_contacts_remove_db', false)) {
 		site_contacts_remove_data();
 
 		delete_option('site_contacts_remove_db');
 	}
 }
-
-?>

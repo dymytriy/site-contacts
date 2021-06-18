@@ -1,7 +1,6 @@
 <?php
 
-if (!defined('ABSPATH'))
-{
+if (!defined('ABSPATH')) {
 	exit;
 }
 
@@ -14,16 +13,13 @@ add_filter('widget_text', 'site_contacts_do_shortcode');
 add_action('plugins_loaded', 'site_contacts_plugins_loaded');
 
 // Functions
-function site_contacts_true($value)
-{
-	if (!empty($value))
-	{
+function site_contacts_true($value) {
+	if (!empty($value)) {
 		$value = trim(strtolower($value));
 
 		if (($value == 'on') ||
 			($value == 'true') ||
-			($value == 'yes'))
-		{
+			($value == 'yes')) {
 			return true;
 		}
 	}
@@ -31,16 +27,13 @@ function site_contacts_true($value)
 	return false;
 }
 
-function site_contacts_checked($value_name)
-{
-	if (!empty($_POST[$value_name]))
-	{
+function site_contacts_checked($value_name) {
+	if (!empty($_POST[$value_name])) {
 		$post_value = trim(strtolower($_POST[$value_name]));
 
 		if (($post_value == 'on') ||
 			($post_value == 'true') ||
-			($post_value == 'yes'))
-		{
+			($post_value == 'yes')) {
 			return true;
 		}
 	}
@@ -48,10 +41,8 @@ function site_contacts_checked($value_name)
 	return false;
 }
 
-function site_contacts_local_time($value)
-{
-	if (!empty($value))
-	{
+function site_contacts_local_time($value) {
+	if (!empty($value)) {
 		$value = get_date_from_gmt($value);
 
 		return date_i18n('Y/m/d g:i:s A', strtotime($value));
@@ -60,18 +51,15 @@ function site_contacts_local_time($value)
 	return '';
 }
 
-function site_contacts_plugins_loaded()
-{
+function site_contacts_plugins_loaded() {
 	$current_version = get_option('site_contacts_version', '');
 
-	if (empty($current_version))
-	{
+	if (empty($current_version)) {
 		site_contacts_create_db();
 	}
 }
 
-function site_contacts_create_db()
-{
+function site_contacts_create_db() {
 	// Create required database structure
 
 	global $wpdb;
@@ -185,8 +173,7 @@ function site_contacts_create_db()
 	update_option('site_contacts_db_schema', SITE_CONTACTS_DB_SCHEMA);
 }
 
-function site_contacts_remove_data()
-{
+function site_contacts_remove_data() {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -203,29 +190,23 @@ function site_contacts_remove_data()
 	delete_option('site_contacts_submissions_form');
 }
 
-function site_contacts_widgets_init()
-{
+function site_contacts_widgets_init() {
 	register_widget('SiteContactsWidget');
 }
 
-function site_contacts_parse_shortcodes($value)
-{
+function site_contacts_parse_shortcodes($value) {
 	$admin_email = get_option('admin_email');
 
-	if (!empty($admin_email))
-	{
+	if (!empty($admin_email)) {
 		$value = str_replace('[admin_email]', $admin_email, $value);
 	}
 
 	return $value;
 }
 
-function site_contacts_field_type($field)
-{
-	if (!empty($field['type']))
-	{
-		switch ($field['type'])
-		{
+function site_contacts_field_type($field) {
+	if (!empty($field['type'])) {
+		switch ($field['type']) {
 			case SITE_CONTACTS_FIELD_TEXTFIELD:
 				return 'text';
 				break;
@@ -267,8 +248,7 @@ function site_contacts_field_type($field)
 	return '';
 }
 
-function site_contacts_default_notification()
-{
+function site_contacts_default_notification() {
 	$default = array(
 		'sendto'	=> __('[admin_email]', 'site-contacts'),
 		'from'		=> __('Administrator <[admin_email]>', 'site-contacts'),
@@ -278,8 +258,7 @@ function site_contacts_default_notification()
 	return $default;
 }
 
-function site_contacts_default_messages()
-{
+function site_contacts_default_messages() {
 	$default = array(
 		'success'				=> __('Your form has been successfully submitted! Thank you for contacting us.', 'site-contacts'),
 		'failure'				=> __('Failed to send form data! Please try again later.', 'site-contacts'),
@@ -293,39 +272,30 @@ function site_contacts_default_messages()
 	return $default;
 }
 
-function site_contacts_submitted_fields($contact_form)
-{
+function site_contacts_submitted_fields($contact_form) {
 	$form_data = array();
 
 	$fields_info = array();
 
-	if (!empty($_POST['site_contacts_fields']) && is_array($_POST['site_contacts_fields']))
-	{
-		foreach ($_POST['site_contacts_fields'] as $item)
-		{
-			if ((!empty($item['name'])) && (!empty($item['value'])))
-			{
+	if (!empty($_POST['site_contacts_fields']) && is_array($_POST['site_contacts_fields'])) {
+		foreach ($_POST['site_contacts_fields'] as $item) {
+			if ((!empty($item['name'])) && (!empty($item['value']))) {
 				$form_data[$item['name']] = wp_unslash($item['value']);
 			}
 		}
 	}
 
-	if (!empty($form_data) && !empty($contact_form['fields']) && is_array($contact_form['fields']))
-	{
-		foreach ($contact_form['fields'] as $field)
-		{
-			if (!empty($field['type']))
-			{
-				switch ($field['type'])
-				{
+	if (!empty($form_data) && !empty($contact_form['fields']) && is_array($contact_form['fields'])) {
+		foreach ($contact_form['fields'] as $field) {
+			if (!empty($field['type'])) {
+				switch ($field['type']) {
 					case SITE_CONTACTS_FIELD_TEXTFIELD:
 					case SITE_CONTACTS_FIELD_PHONE:
 					case SITE_CONTACTS_FIELD_EMAIL:
 					case SITE_CONTACTS_FIELD_URL:
 					case SITE_CONTACTS_FIELD_DROPDOWN:
 					case SITE_CONTACTS_FIELD_TEXTAREA:
-					case SITE_CONTACTS_FIELD_RADIOBOXES:
-					{
+					case SITE_CONTACTS_FIELD_RADIOBOXES: {
 						$field_name = 'site_contacts_' . site_contacts_field_type($field) . '_' . $field['field_id'];
 
 						$new_field = array();
@@ -336,8 +306,7 @@ function site_contacts_submitted_fields($contact_form)
 						$new_field['required'] = $field['required'];
 						$new_field['label'] = $field['label'];
 
-						if (!empty($form_data[$field_name]))
-						{
+						if (!empty($form_data[$field_name])) {
 							$new_field['content'] = $form_data[$field_name];
 						}
 
@@ -345,19 +314,15 @@ function site_contacts_submitted_fields($contact_form)
 					}
 					break;
 
-					case SITE_CONTACTS_FIELD_CHECKBOXES:
-					{
+					case SITE_CONTACTS_FIELD_CHECKBOXES: {
 						$field_entries = array();
 
-						if (!empty($field['entries']) && is_array($field['entries']))
-						{
-							foreach ($field['entries'] as $entry)
-							{
+						if (!empty($field['entries']) && is_array($field['entries'])) {
+							foreach ($field['entries'] as $entry) {
 								$entry_name = 'site_contacts_' . site_contacts_field_type($field) .
 									'_' . $field['field_id'] . '_' . $entry['entry_id'];
 
-								if (!empty($form_data[$entry_name]))
-								{
+								if (!empty($form_data[$entry_name])) {
 									$new_entry = array();
 
 									$new_entry['entry_id'] = $entry['entry_id'];
@@ -378,8 +343,7 @@ function site_contacts_submitted_fields($contact_form)
 						$new_field['required'] = $field['required'];
 						$new_field['label'] = $field['label'];
 
-						if (!empty($field_entries) && is_array($field_entries) && (count($field_entries) > 0))
-						{
+						if (!empty($field_entries) && is_array($field_entries) && (count($field_entries) > 0)) {
 							$new_field['entries'] = $field_entries;
 						}
 
@@ -394,24 +358,18 @@ function site_contacts_submitted_fields($contact_form)
 	return $fields_info;
 }
 
-function site_contacts_validate_regular($contact_form, $fields_info, $messages)
-{
+function site_contacts_validate_regular($contact_form, $fields_info, $messages) {
 	$submission_errors = array();
 
-	foreach ($fields_info as $item)
-	{
-		switch ($item['type'])
-		{
+	foreach ($fields_info as $item) {
+		switch ($item['type']) {
 			case SITE_CONTACTS_FIELD_PHONE:
 			case SITE_CONTACTS_FIELD_TEXTFIELD:
 			case SITE_CONTACTS_FIELD_TEXTAREA:
 			case SITE_CONTACTS_FIELD_DROPDOWN:
-			case SITE_CONTACTS_FIELD_RADIOBOXES:
-			{
-				if ($item['required'])
-				{
-					if (!isset($item['content']))
-					{
+			case SITE_CONTACTS_FIELD_RADIOBOXES: {
+				if ($item['required']) {
+					if (!isset($item['content'])) {
 						$error_info = array();
 
 						$error_info['field_id'] = $item['field_id'];
@@ -423,14 +381,11 @@ function site_contacts_validate_regular($contact_form, $fields_info, $messages)
 			}
 			break;
 
-			case SITE_CONTACTS_FIELD_EMAIL:
-			{
+			case SITE_CONTACTS_FIELD_EMAIL: {
 				$has_error = false;
 
-				if ($item['required'])
-				{
-					if (!isset($item['content']))
-					{
+				if ($item['required']) {
+					if (!isset($item['content'])) {
 						$error_info = array();
 
 						$error_info['field_id'] = $item['field_id'];
@@ -442,10 +397,8 @@ function site_contacts_validate_regular($contact_form, $fields_info, $messages)
 					}
 				}
 
-				if (!$has_error)
-				{
-					if ((!empty($item['content'])) && (!is_email($item['content'])))
-					{
+				if (!$has_error) {
+					if ((!empty($item['content'])) && (!is_email($item['content']))) {
 						$error_info = array();
 
 						$error_info['field_id'] = $item['field_id'];
@@ -457,14 +410,11 @@ function site_contacts_validate_regular($contact_form, $fields_info, $messages)
 			}
 			break;
 
-			case SITE_CONTACTS_FIELD_URL:
-			{
+			case SITE_CONTACTS_FIELD_URL: {
 				$has_error = false;
 
-				if ($item['required'])
-				{
-					if (!isset($item['content']))
-					{
+				if ($item['required']) {
+					if (!isset($item['content'])) {
 						$error_info = array();
 
 						$error_info['field_id'] = $item['field_id'];
@@ -476,10 +426,8 @@ function site_contacts_validate_regular($contact_form, $fields_info, $messages)
 					}
 				}
 
-				if (!$has_error)
-				{
-					if ((!empty($item['content'])) && (filter_var($item['content'], FILTER_VALIDATE_URL) == false))
-					{
+				if (!$has_error) {
+					if ((!empty($item['content'])) && (filter_var($item['content'], FILTER_VALIDATE_URL) == false)) {
 						$error_info = array();
 
 						$error_info['field_id'] = $item['field_id'];
@@ -491,12 +439,9 @@ function site_contacts_validate_regular($contact_form, $fields_info, $messages)
 			}
 			break;
 
-			case SITE_CONTACTS_FIELD_CHECKBOXES:
-			{
-				if ($item['required'])
-				{
-					if (empty($item['entries']))
-					{
+			case SITE_CONTACTS_FIELD_CHECKBOXES: {
+				if ($item['required']) {
+					if (empty($item['entries'])) {
 						$error_info = array();
 
 						$error_info['field_id'] = $item['field_id'];
@@ -513,27 +458,21 @@ function site_contacts_validate_regular($contact_form, $fields_info, $messages)
 	return $submission_errors;
 }
 
-function site_contacts_validate_data($contact_form, $fields_info)
-{
+function site_contacts_validate_data($contact_form, $fields_info) {
 	$messages = array();
 
-	if ($contact_form && isset($contact_form['form']['config']['messages']))
-	{
+	if ($contact_form && isset($contact_form['form']['config']['messages'])) {
 		$messages = wp_parse_args($contact_form['form']['config']['messages'], site_contacts_default_messages());
-	}
-	else
-	{
+	} else {
 		$messages = site_contacts_default_messages();
 	}
 
 	return site_contacts_validate_regular($contact_form, $fields_info, $messages);
 }
 
-function site_contacts_send($contact_form, $message)
-{
+function site_contacts_send($contact_form, $message) {
 	// Send notification by email
-	if (!empty($contact_form['form']['config']['notification']['sendto']))
-	{
+	if (!empty($contact_form['form']['config']['notification']['sendto'])) {
 		// Mail to field
 
 		$mail_to = $contact_form['form']['config']['notification']['sendto'];
@@ -544,8 +483,7 @@ function site_contacts_send($contact_form, $message)
 
 		$mail_from = __('Administrator <[admin_email]>', 'site-contacts');
 
-		if (isset($contact_form['form']['config']['notification']['from']))
-		{
+		if (isset($contact_form['form']['config']['notification']['from'])) {
 			$mail_from = $contact_form['form']['config']['notification']['from'];
 		}
 
@@ -555,16 +493,14 @@ function site_contacts_send($contact_form, $message)
 
 		$mail_subject = __('New form submission', 'site-contacts');
 
-		if (isset($contact_form['form']['config']['notification']['subject']))
-		{
+		if (isset($contact_form['form']['config']['notification']['subject'])) {
 			$mail_subject = $contact_form['form']['config']['notification']['subject'];
 		}
 
 		// Headers
 		$mail_headers = '';
 
-		if (!empty($mail_from))
-		{
+		if (!empty($mail_from)) {
 			$mail_headers = 'From: ' . $mail_from . "\n";
 		}
 
@@ -578,48 +514,37 @@ function site_contacts_send($contact_form, $message)
 	return false;
 }
 
-function site_contacts_notify($contact_form, $fields_info)
-{
+function site_contacts_notify($contact_form, $fields_info) {
 	// Construct message body
 	$message = '';
 
-	foreach ($fields_info as $item)
-	{
-		switch ($item['type'])
-		{
+	foreach ($fields_info as $item) {
+		switch ($item['type']) {
 			case SITE_CONTACTS_FIELD_TEXTFIELD:
 			case SITE_CONTACTS_FIELD_PHONE:
 			case SITE_CONTACTS_FIELD_EMAIL:
 			case SITE_CONTACTS_FIELD_URL:
 			case SITE_CONTACTS_FIELD_DROPDOWN:
 			case SITE_CONTACTS_FIELD_TEXTAREA:
-			case SITE_CONTACTS_FIELD_RADIOBOXES:
-			{
+			case SITE_CONTACTS_FIELD_RADIOBOXES: {
 				$message .= $item['label'] . ":\n";
 
-				if (!empty($item['content']))
-				{
+				if (!empty($item['content'])) {
 					$message .= $item['content'] . "\n\n";
-				}
-				else
-				{
+				} else {
 					$message .= "\n";
 				}
 			}
 			break;
 
-			case SITE_CONTACTS_FIELD_CHECKBOXES:
-			{
+			case SITE_CONTACTS_FIELD_CHECKBOXES: {
 				$message .= $item['label'] . ":\n";
 
-				if (!empty($item['entries']) && is_array($item['entries']))
-				{
+				if (!empty($item['entries']) && is_array($item['entries'])) {
 					$index = 0;
 
-					foreach ($item['entries'] as $entry)
-					{
-						if ($index > 0)
-						{
+					foreach ($item['entries'] as $entry) {
+						if ($index > 0) {
 							$message .= ", ";
 						}
 
@@ -638,34 +563,27 @@ function site_contacts_notify($contact_form, $fields_info)
 	return site_contacts_send($contact_form, $message);
 }
 
-function site_contacts_do_shortcode($text)
-{
-	if (stripos($text, SITE_CONTACTS_FORM_SHORTCODE) !== FALSE)
-	{
+function site_contacts_do_shortcode($text) {
+	if (stripos($text, SITE_CONTACTS_FORM_SHORTCODE) !== FALSE) {
 		return do_shortcode($text);
 	}
 
 	return $text;
 }
 
-function site_contacts_media_inline()
-{
+function site_contacts_media_inline() {
 	$contacts_js_data = array();
 
 	$contacts = site_contacts_get_all();
 
-	foreach ($contacts as $item)
-	{
+	foreach ($contacts as $item) {
 		$new_item = array();
 
 		$new_item['id'] = $item['id'];
 
-		if (!empty($item['title']))
-		{
+		if (!empty($item['title'])) {
 			$new_item['title'] = __('ID #', 'site-contacts') . $item['id'] . ': ' . esc_html(stripslashes($item['title']));
-		}
-		else
-		{
+		} else {
 			$new_item['title'] = __('ID #', 'site-contacts') . $item['id'] . ': ' . __('(No title)', 'site-contacts');
 		}
 
@@ -698,12 +616,9 @@ var site_contacts_media_ids = <?php echo json_encode($contacts_js_data) ?>;
 <?php
 }
 
-function site_contacts_field_class($field)
-{
-	if (!empty($field['type']))
-	{
-		switch ($field['type'])
-		{
+function site_contacts_field_class($field) {
+	if (!empty($field['type'])) {
+		switch ($field['type']) {
 			case SITE_CONTACTS_FIELD_TEXTFIELD:
 				return 'site-contacts-field-textfield';
 				break;
@@ -745,21 +660,18 @@ function site_contacts_field_class($field)
 	return '';
 }
 
-function site_contacts_render_textfield($form_id, $field)
-{
+function site_contacts_render_textfield($form_id, $field) {
 	$result = '';
 
 	$required_sign = '';
 	$required_data_attribute = '';
 
-	if ($field['required'])
-	{
+	if ($field['required']) {
 		$required_data_attribute = 'data-site-contacts-required="true" ';
 		$required_sign = '<span class="site-contacts-field-required">*</span>';
 	}
 
-	if (!empty($field['label']))
-	{
+	if (!empty($field['label'])) {
 		$result .= '
 			<div class="site-contacts-field-label"><label for="site_contacts_text_' . $field['field_id'] . '" class="site-contacts-label-content">' . esc_html($field['label']) . $required_sign . '</label></div>';
 	}
@@ -776,21 +688,18 @@ function site_contacts_render_textfield($form_id, $field)
 	return $result;
 }
 
-function site_contacts_render_phone($form_id, $field)
-{
+function site_contacts_render_phone($form_id, $field) {
 	$result = '';
 
 	$required_sign = '';
 	$required_data_attribute = '';
 
-	if ($field['required'])
-	{
+	if ($field['required']) {
 		$required_data_attribute = 'data-site-contacts-required="true" ';
 		$required_sign = '<span class="site-contacts-field-required">*</span>';
 	}
 
-	if (!empty($field['label']))
-	{
+	if (!empty($field['label'])) {
 		$result .= '
 			<div class="site-contacts-field-label"><label for="site_contacts_phone_' . $field['field_id'] . '" class="site-contacts-label-content">' . esc_html($field['label']) . $required_sign . '</label></div>';
 	}
@@ -807,21 +716,18 @@ function site_contacts_render_phone($form_id, $field)
 	return $result;
 }
 
-function site_contacts_render_email($form_id, $field)
-{
+function site_contacts_render_email($form_id, $field) {
 	$result = '';
 
 	$required_sign = '';
 	$required_data_attribute = '';
 
-	if ($field['required'])
-	{
+	if ($field['required']) {
 		$required_data_attribute = 'data-site-contacts-required="true" ';
 		$required_sign = '<span class="site-contacts-field-required">*</span>';
 	}
 
-	if (!empty($field['label']))
-	{
+	if (!empty($field['label'])) {
 		$result .= '
 			<div class="site-contacts-field-label"><label for="site_contacts_email_' . $field['field_id'] . '" class="site-contacts-label-content">' . esc_html($field['label']) . $required_sign . '</label></div>';
 	}
@@ -838,21 +744,18 @@ function site_contacts_render_email($form_id, $field)
 	return $result;
 }
 
-function site_contacts_render_dropdown($form_id, $field)
-{
+function site_contacts_render_dropdown($form_id, $field) {
 	$result = '';
 
 	$required_sign = '';
 	$required_data_attribute = '';
 
-	if ($field['required'])
-	{
+	if ($field['required']) {
 		$required_data_attribute = 'data-site-contacts-required="true" ';
 		$required_sign = '<span class="site-contacts-field-required">*</span>';
 	}
 
-	if (!empty($field['label']))
-	{
+	if (!empty($field['label'])) {
 		$result .= '
 			<div class="site-contacts-field-label"><label for="site_contacts_dropdown_' . $field['field_id'] . '" class="site-contacts-label-content">' . esc_html($field['label']) . $required_sign . '</label></div>';
 	}
@@ -863,10 +766,8 @@ function site_contacts_render_dropdown($form_id, $field)
 	$result .= '
 			<select class="site-contacts-select" ' . $required_data_attribute . 'id="site_contacts_dropdown_' . $field['field_id'] . '" name="site_contacts_dropdown_' . $field['field_id'] . '">';
 
-	if (!empty($field['entries']) && is_array($field['entries']))
-	{
-		foreach ($field['entries'] as $entry)
-		{
+	if (!empty($field['entries']) && is_array($field['entries'])) {
+		foreach ($field['entries'] as $entry) {
 			$result .= '
 				<option>' . esc_html($entry['title']) . '</option>';
 		}
@@ -881,21 +782,18 @@ function site_contacts_render_dropdown($form_id, $field)
 	return $result;
 }
 
-function site_contacts_render_checkboxes($form_id, $field)
-{
+function site_contacts_render_checkboxes($form_id, $field) {
 	$result = '';
 
 	$required_sign = '';
 	$required_data_attribute = '';
 
-	if ($field['required'])
-	{
+	if ($field['required']) {
 		$required_data_attribute = 'data-site-contacts-required="true" ';
 		$required_sign = '<span class="site-contacts-field-required">*</span>';
 	}
 
-	if (!empty($field['label']))
-	{
+	if (!empty($field['label'])) {
 		$result .= '
 			<div class="site-contacts-field-label"><label class="site-contacts-label-content">' . esc_html($field['label']) . $required_sign . '</label></div>';
 	}
@@ -905,10 +803,8 @@ function site_contacts_render_checkboxes($form_id, $field)
 
 	$entry_index = 0;
 
-	if (!empty($field['entries']) && is_array($field['entries']))
-	{
-		foreach ($field['entries'] as $entry)
-		{
+	if (!empty($field['entries']) && is_array($field['entries'])) {
+		foreach ($field['entries'] as $entry) {
 			$result .= '
 			<div class="site-contacts-field-option"><label><input type="checkbox" class="site-contacts-input-checkbox" ' . $required_data_attribute . 'id="site_contacts_checkbox_' . $field['field_id'] . '_' . $entry['entry_id'] . '" name="site_contacts_checkbox_' . $field['field_id'] . '_' . $entry['entry_id'] . '" value="' . esc_html($entry['title']) . '"/>' . esc_html($entry['title']) . '</label></div>';
 
@@ -922,21 +818,18 @@ function site_contacts_render_checkboxes($form_id, $field)
 	return $result;
 }
 
-function site_contacts_render_radioboxes($form_id, $field)
-{
+function site_contacts_render_radioboxes($form_id, $field) {
 	$result = '';
 
 	$required_sign = '';
 	$required_data_attribute = '';
 
-	if ($field['required'])
-	{
+	if ($field['required']) {
 		$required_data_attribute = 'data-site-contacts-required="true" ';
 		$required_sign = '<span class="site-contacts-field-required">*</span>';
 	}
 
-	if (!empty($field['label']))
-	{
+	if (!empty($field['label'])) {
 		$result .= '
 			<div class="site-contacts-field-label"><label class="site-contacts-label-content">' . esc_html($field['label']) . $required_sign . '</label></div>';
 	}
@@ -946,10 +839,8 @@ function site_contacts_render_radioboxes($form_id, $field)
 
 	$entry_index = 0;
 
-	if (!empty($field['entries']) && is_array($field['entries']))
-	{
-		foreach ($field['entries'] as $entry)
-		{
+	if (!empty($field['entries']) && is_array($field['entries'])) {
+		foreach ($field['entries'] as $entry) {
 			$result .= '
 			<div class="site-contacts-field-option"><label><input type="radio" class="site-contacts-input-radio" ' . $required_data_attribute . 'name="site_contacts_radio_' . $field['field_id'] . '" value="' . esc_html($entry['title']) . '" />' . esc_html($entry['title']) . '</label></div>';
 
@@ -963,21 +854,18 @@ function site_contacts_render_radioboxes($form_id, $field)
 	return $result;
 }
 
-function site_contacts_render_textarea($form_id, $field)
-{
+function site_contacts_render_textarea($form_id, $field) {
 	$result = '';
 
 	$required_sign = '';
 	$required_data_attribute = '';
 
-	if ($field['required'])
-	{
+	if ($field['required']) {
 		$required_data_attribute = 'data-site-contacts-required="true" ';
 		$required_sign = '<span class="site-contacts-field-required">*</span>';
 	}
 
-	if (!empty($field['label']))
-	{
+	if (!empty($field['label'])) {
 		$result .= '
 			<div class="site-contacts-field-label"><label for="site_contacts_textarea_' . $field['field_id'] . '" class="site-contacts-label-content">' . esc_html($field['label']) . $required_sign . '</label></div>';
 	}
@@ -994,15 +882,13 @@ function site_contacts_render_textarea($form_id, $field)
 	return $result;
 }
 
-function site_contacts_render_submit($form_id, $field)
-{
+function site_contacts_render_submit($form_id, $field) {
 	$result = '';
 
 	$required_sign = '';
 	$required_data_attribute = '';
 
-	if ($field['required'])
-	{
+	if ($field['required']) {
 		$required_data_attribute = 'data-site-contacts-required="true" ';
 		$required_sign = '<span class="site-contacts-field-required">*</span>';
 	}
@@ -1019,21 +905,18 @@ function site_contacts_render_submit($form_id, $field)
 	return $result;
 }
 
-function site_contacts_render_url($form_id, $field)
-{
+function site_contacts_render_url($form_id, $field) {
 	$result = '';
 
 	$required_sign = '';
 	$required_data_attribute = '';
 
-	if ($field['required'])
-	{
+	if ($field['required']) {
 		$required_data_attribute = 'data-site-contacts-required="true" ';
 		$required_sign = '<span class="site-contacts-field-required">*</span>';
 	}
 
-	if (!empty($field['label']))
-	{
+	if (!empty($field['label'])) {
 		$result .= '
 			<div class="site-contacts-field-label"><label for="site_contacts_url_' . $field['field_id'] . '" class="site-contacts-label-content">' . esc_html($field['label']) . $required_sign . '</label></div>';
 	}
@@ -1050,14 +933,11 @@ function site_contacts_render_url($form_id, $field)
 	return $result;
 }
 
-function site_contacts_render_field($form_id, $field)
-{
+function site_contacts_render_field($form_id, $field) {
 	$result = '';
 
-	if (!empty($field['type']))
-	{
-		switch ($field['type'])
-		{
+	if (!empty($field['type'])) {
+		switch ($field['type']) {
 			case SITE_CONTACTS_FIELD_TEXTFIELD:
 					return site_contacts_render_textfield($form_id, $field);
 				break;
@@ -1099,18 +979,14 @@ function site_contacts_render_field($form_id, $field)
 	return $result;
 }
 
-function site_contacts_render($contact_form)
-{
+function site_contacts_render($contact_form) {
 	$result = '';
 
 	$messages = array();
 
-	if ($contact_form && isset($contact_form['form']['config']['messages']))
-	{
+	if ($contact_form && isset($contact_form['form']['config']['messages'])) {
 		$messages = wp_parse_args($contact_form['form']['config']['messages'], site_contacts_default_messages());
-	}
-	else
-	{
+	} else {
 		$messages = site_contacts_default_messages();
 	}
 
@@ -1128,8 +1004,7 @@ var site_contacts_form_' . $contact_form['form']['id'] . '_data = {
 	<form method="post" novalidate="novalidate" id="site_contacts_form_' . $contact_form['form']['id'] . '" name="site_contacts_form_' . $contact_form['form']['id'] . '" class="site-contacts-form site-contacts-form-' . $contact_form['form']['id'] . '">
 		<div class="site-contacts-form-body">';
 
-	if (!empty($contact_form['form']['title']))
-	{
+	if (!empty($contact_form['form']['title'])) {
 		$result .= '
 			<div class="site-contacts-title">' . esc_html($contact_form['form']['title']) . '</div>';
 	}
@@ -1137,14 +1012,11 @@ var site_contacts_form_' . $contact_form['form']['id'] . '_data = {
 	$result .= '
 			<div class="site-contacts-form-content">';
 
-	if (!empty($contact_form['fields']) && is_array($contact_form['fields']))
-	{
-		foreach ($contact_form['fields'] as $item)
-		{
+	if (!empty($contact_form['fields']) && is_array($contact_form['fields'])) {
+		foreach ($contact_form['fields'] as $item) {
 			$required_css_classes = site_contacts_field_class($item);
 
-			if ($item['required'])
-			{
+			if ($item['required']) {
 				$required_css_classes .= ' site-contacts-field-required';
 			}
 
@@ -1169,16 +1041,13 @@ var site_contacts_form_' . $contact_form['form']['id'] . '_data = {
 	return $result;
 }
 
-function site_contacts_show($atts, $content = null)
-{
+function site_contacts_show($atts, $content = null) {
 	extract(shortcode_atts(array('id' => '0'), $atts));
 
-	if (!empty($id))
-	{
+	if (!empty($id)) {
 		$contact_form = site_contacts_get($id);
 
-		if (!empty($contact_form) && !empty($contact_form['form']))
-		{
+		if (!empty($contact_form) && !empty($contact_form['form'])) {
 			return site_contacts_render($contact_form);
 		}
 	}
@@ -1186,47 +1055,33 @@ function site_contacts_show($atts, $content = null)
 	return '<p><b>' . __('Error: no contact form found with the specified ID', 'site-contacts') . '</b></p>';
 }
 
-function site_contacts_unserialize_form(&$form)
-{
-	if (!empty($form['config']))
-	{
+function site_contacts_unserialize_form(&$form) {
+	if (!empty($form['config'])) {
 		$config = unserialize($form['config']);
 
-		if ((!empty($config)) && is_array($config))
-		{
+		if ((!empty($config)) && is_array($config)) {
 			$form['config'] = $config;
-		}
-		else
-		{
+		} else {
 			$form['config'] = null;
 		}
-	}
-	else
-	{
+	} else {
 		$form['config'] = null;
 	}
 
-	if (!empty($form['style']))
-	{
+	if (!empty($form['style'])) {
 		$style = unserialize($form['style']);
 
-		if ((!empty($style)) && is_array($style))
-		{
+		if ((!empty($style)) && is_array($style)) {
 			$form['style'] = $style;
-		}
-		else
-		{
+		} else {
 			$form['style'] = null;
 		}
-	}
-	else
-	{
+	} else {
 		$form['style'] = null;
 	}
 }
 
-function site_contacts_get_fields($id)
-{
+function site_contacts_get_fields($id) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -1236,39 +1091,29 @@ function site_contacts_get_fields($id)
 		WHERE form_id = %d
 		ORDER BY weight ASC;', intval($id)), ARRAY_A);
 
-	if (!empty($contact_form_fields) && is_array($contact_form_fields))
-	{
-		foreach ($contact_form_fields as $key => $item)
-		{
-			if (!empty($contact_form_fields[$key]['config']))
-			{
+	if (!empty($contact_form_fields) && is_array($contact_form_fields)) {
+		foreach ($contact_form_fields as $key => $item) {
+			if (!empty($contact_form_fields[$key]['config'])) {
 				$config = unserialize($contact_form_fields[$key]['config']);
 
-				if ((!empty($config)) && is_array($config))
-				{
+				if ((!empty($config)) && is_array($config)) {
 					$contact_form_fields[$key]['config'] = $config;
-				}
-				else
-				{
+				} else {
 					$contact_form_fields[$key]['config'] = null;
 				}
-			}
-			else
-			{
+			} else {
 				$contact_form_fields[$key]['config'] = null;
 			}
 
 			if (($item['type'] == SITE_CONTACTS_FIELD_DROPDOWN) ||
 				($item['type'] == SITE_CONTACTS_FIELD_CHECKBOXES) ||
-				($item['type'] == SITE_CONTACTS_FIELD_RADIOBOXES))
-			{
+				($item['type'] == SITE_CONTACTS_FIELD_RADIOBOXES)) {
 				$contact_form_field_entries = $wpdb->get_results($wpdb->prepare('
 					SELECT * FROM `' . $table_prefix . 'field_entries`
 					WHERE field_id = %d
 					ORDER BY weight ASC;', intval($item['field_id'])), ARRAY_A);
 
-				if (!empty($contact_form_field_entries) && is_array($contact_form_field_entries))
-				{
+				if (!empty($contact_form_field_entries) && is_array($contact_form_field_entries)) {
 					$contact_form_fields[$key]['entries'] = $contact_form_field_entries;
 				}
 			}
@@ -1280,8 +1125,7 @@ function site_contacts_get_fields($id)
 	return null;
 }
 
-function site_contacts_get($id)
-{
+function site_contacts_get($id) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -1290,8 +1134,7 @@ function site_contacts_get($id)
 		SELECT * FROM `' . $table_prefix . 'forms`
 		WHERE id = %d;', intval($id)), ARRAY_A);
 
-	if (!empty($contact_form_base))
-	{
+	if (!empty($contact_form_base)) {
 		site_contacts_unserialize_form($contact_form_base);
 
 		$contact_form = array();
@@ -1300,8 +1143,7 @@ function site_contacts_get($id)
 
 		$contact_form_fields = site_contacts_get_fields($id);
 
-		if (!empty($contact_form_fields))
-		{
+		if (!empty($contact_form_fields)) {
 			$contact_form['fields'] = $contact_form_fields;
 		}
 
@@ -1311,8 +1153,7 @@ function site_contacts_get($id)
 	return null;
 }
 
-function site_contacts_get_range($current_page, $items_per_page)
-{
+function site_contacts_get_range($current_page, $items_per_page) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -1322,10 +1163,8 @@ function site_contacts_get_range($current_page, $items_per_page)
 		ORDER BY id ASC
 		LIMIT %d, %d;', $current_page * $items_per_page, $items_per_page), ARRAY_A);
 
-	if (!empty($contact_forms) && is_array($contact_forms))
-	{
-		foreach ($contact_forms as $form_key => $form)
-		{
+	if (!empty($contact_forms) && is_array($contact_forms)) {
+		foreach ($contact_forms as $form_key => $form) {
 			site_contacts_unserialize_form($contact_forms[$form_key]);
 		}
 	}
@@ -1333,18 +1172,15 @@ function site_contacts_get_range($current_page, $items_per_page)
 	return $contact_forms;
 }
 
-function site_contacts_get_all()
-{
+function site_contacts_get_all() {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
 
 	$contact_forms = $wpdb->get_results('SELECT * FROM `' . $table_prefix . 'forms` ORDER BY id ASC;', ARRAY_A);
 
-	if (!empty($contact_forms) && is_array($contact_forms))
-	{
-		foreach ($contact_forms as $form_key => $form)
-		{
+	if (!empty($contact_forms) && is_array($contact_forms)) {
+		foreach ($contact_forms as $form_key => $form) {
 			site_contacts_unserialize_form($contact_forms[$form_key]);
 		}
 	}
@@ -1352,8 +1188,7 @@ function site_contacts_get_all()
 	return $contact_forms;
 }
 
-function site_contacts_get_all_count()
-{
+function site_contacts_get_all_count() {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -1361,8 +1196,7 @@ function site_contacts_get_all_count()
 	return $wpdb->get_var('SELECT COUNT(id) FROM `' . $table_prefix . 'forms`;');
 }
 
-function site_contacts_delete_form($id)
-{
+function site_contacts_delete_form($id) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -1372,20 +1206,16 @@ function site_contacts_delete_form($id)
 	$wpdb->query($wpdb->prepare('DELETE FROM `' . $table_prefix . 'field_entries` WHERE form_id = %d;', intval($id)));
 }
 
-function site_contacts_get_post_fields()
-{
+function site_contacts_get_post_fields() {
 	$post_fields = array();
 
-	foreach ($_POST as $post_key => $post_value)
-	{
-		if (strpos($post_key, 'site_contacts_option_') !== FALSE)
-		{
+	foreach ($_POST as $post_key => $post_value) {
+		if (strpos($post_key, 'site_contacts_option_') !== FALSE) {
 			$field_info = str_replace('site_contacts_option_', '', $post_key);
 
 			$field_info_list = explode('_', $field_info);
 
-			if ($field_info_list && is_array($field_info_list) && (count($field_info_list) >= 2))
-			{
+			if ($field_info_list && is_array($field_info_list) && (count($field_info_list) >= 2)) {
 				$field_index = intval(array_pop($field_info_list));
 				$field_name = implode('_', $field_info_list);
 
@@ -1397,62 +1227,44 @@ function site_contacts_get_post_fields()
 	return $post_fields;
 }
 
-function site_contacts_standard_options($post_value)
-{
+function site_contacts_standard_options($post_value) {
 	$processed_item = array();
 
-	if (isset($post_value['field_id']))
-	{
+	if (isset($post_value['field_id'])) {
 		$processed_item['field_id'] = intval($post_value['field_id']);
 	}
 
-	if (isset($post_value['type']))
-	{
+	if (isset($post_value['type'])) {
 		$processed_item['type'] = intval($post_value['type']);
 	}
 
-	if (isset($post_value['weight']))
-	{
+	if (isset($post_value['weight'])) {
 		$processed_item['weight'] = intval($post_value['weight']);
-	}
-	else
-	{
+	} else {
 		$processed_item['weight'] = 0;
 	}
 
-	if (isset($post_value['required']) && site_contacts_true($post_value['required']))
-	{
+	if (isset($post_value['required']) && site_contacts_true($post_value['required'])) {
 		$processed_item['required'] = 1;
-	}
-	else
-	{
+	} else {
 		$processed_item['required'] = 0;
 	}
 
-	if (!empty($post_value['label']))
-	{
+	if (!empty($post_value['label'])) {
 		$processed_item['label'] = $post_value['label'];
-	}
-	else
-	{
+	} else {
 		$processed_item['label'] = '';
 	}
 
-	if (!empty($post_value['title']))
-	{
+	if (!empty($post_value['title'])) {
 		$processed_item['title'] = $post_value['title'];
-	}
-	else
-	{
+	} else {
 		$processed_item['title'] = '';
 	}
 
-	if (!empty($post_value['value']))
-	{
+	if (!empty($post_value['value'])) {
 		$processed_item['value'] = $post_value['value'];
-	}
-	else
-	{
+	} else {
 		$processed_item['value'] = '';
 	}
 
@@ -1461,27 +1273,21 @@ function site_contacts_standard_options($post_value)
 	return $processed_item;
 }
 
-function site_contacts_process_fields($post_fields)
-{
+function site_contacts_process_fields($post_fields) {
 	$processed_fields = array();
 
-	if ((!empty($post_fields)) && is_array($processed_fields))
-	{
-		foreach ($post_fields as $post_key => $post_value)
-		{
-			if (!empty($post_value['type']))
-			{
+	if ((!empty($post_fields)) && is_array($processed_fields)) {
+		foreach ($post_fields as $post_key => $post_value) {
+			if (!empty($post_value['type'])) {
 				$field_type = intval($post_value['type']);
 
-				switch ($field_type)
-				{
+				switch ($field_type) {
 					case SITE_CONTACTS_FIELD_TEXTFIELD:
 					case SITE_CONTACTS_FIELD_PHONE:
 					case SITE_CONTACTS_FIELD_EMAIL:
 					case SITE_CONTACTS_FIELD_URL:
 					case SITE_CONTACTS_FIELD_TEXTAREA:
-					case SITE_CONTACTS_FIELD_SUBMIT_BUTTON:
-					{
+					case SITE_CONTACTS_FIELD_SUBMIT_BUTTON: {
 						$processed_item = site_contacts_standard_options($post_value);
 
 						$processed_fields[$post_key] = $processed_item;
@@ -1490,22 +1296,17 @@ function site_contacts_process_fields($post_fields)
 
 					case SITE_CONTACTS_FIELD_DROPDOWN:
 					case SITE_CONTACTS_FIELD_CHECKBOXES:
-					case SITE_CONTACTS_FIELD_RADIOBOXES:
-					{
+					case SITE_CONTACTS_FIELD_RADIOBOXES: {
 						$processed_item = site_contacts_standard_options($post_value);
 
-						if (isset($post_value['entries']))
-						{
+						if (isset($post_value['entries'])) {
 							$entries = explode("\n", str_replace("\r", "", $post_value['entries']));
 
-							if (!empty($entries) && is_array($entries))
-							{
+							if (!empty($entries) && is_array($entries)) {
 								$processed_item['entries'] = array();
 
-								foreach ($entries as $entry_value)
-								{
-									if (!empty($entry_value))
-									{
+								foreach ($entries as $entry_value) {
+									if (!empty($entry_value)) {
 										$new_entry = array();
 
 										$new_entry['title'] = $entry_value;
@@ -1527,20 +1328,15 @@ function site_contacts_process_fields($post_fields)
 	return $processed_fields;
 }
 
-function site_contacts_get_post_config_field(&$config, $scope, $target_field, $post_field)
-{
-	if (!empty($_POST[$post_field]))
-	{
+function site_contacts_get_post_config_field(&$config, $scope, $target_field, $post_field) {
+	if (!empty($_POST[$post_field])) {
 		$config[$scope][$target_field] = wp_unslash($_POST[$post_field]);
-	}
-	else
-	{
+	} else {
 		$config[$scope][$target_field] = '';
 	}
 }
 
-function site_contacts_get_post_config_data()
-{
+function site_contacts_get_post_config_data() {
 	$config = array();
 
 	site_contacts_get_post_config_field($config, 'notification', 'sendto', 'site_contacts_notification_sendto');
@@ -1557,8 +1353,7 @@ function site_contacts_get_post_config_data()
 	return $config;
 }
 
-function site_contacts_update_form($form_id)
-{
+function site_contacts_update_form($form_id) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -1572,8 +1367,7 @@ function site_contacts_update_form($form_id)
 			id = ' . $form_id . ';', wp_unslash($_POST['site_contacts_title']), serialize($config)));
 }
 
-function site_contacts_update_single_field($form_id, $item)
-{
+function site_contacts_update_single_field($form_id, $item) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -1586,8 +1380,7 @@ function site_contacts_update_single_field($form_id, $item)
 			field_id = %d;', $item['weight'], $item['required'], $item['label'], $item['title'], $item['value'], serialize($item['config']), $item['field_id']));
 }
 
-function site_contacts_check_fields($form_id, $post_fields)
-{
+function site_contacts_check_fields($form_id, $post_fields) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -1597,25 +1390,19 @@ function site_contacts_check_fields($form_id, $post_fields)
 		SELECT * FROM `' . $table_prefix . 'fields`
 		WHERE `form_id` = %d;', $form_id), ARRAY_A);
 
-	if (!empty($fields) && is_array($fields))
-	{
-		foreach ($fields as $item)
-		{
+	if (!empty($fields) && is_array($fields)) {
+		foreach ($fields as $item) {
 			$found_field = false;
 
-			foreach ($post_fields as $post_item)
-			{
-				if ((!empty($post_item['field_id'])) && (!empty($item['field_id'])))
-				{
-					if (intval($item['field_id']) == intval($post_item['field_id']))
-					{
+			foreach ($post_fields as $post_item) {
+				if ((!empty($post_item['field_id'])) && (!empty($item['field_id']))) {
+					if (intval($item['field_id']) == intval($post_item['field_id'])) {
 						$found_field = true;
 					}
 				}
 			}
 
-			if (!$found_field)
-			{
+			if (!$found_field) {
 				$wpdb->query($wpdb->prepare('DELETE FROM `' . $table_prefix . 'fields` WHERE field_id = %d;', intval($item['field_id'])));
 				$wpdb->query($wpdb->prepare('DELETE FROM `' . $table_prefix . 'field_entries` WHERE field_id = %d;', intval($item['field_id'])));
 			}
@@ -1623,36 +1410,29 @@ function site_contacts_check_fields($form_id, $post_fields)
 	}
 }
 
-function site_contacts_update_fields($form_id, $post_fields)
-{
+function site_contacts_update_fields($form_id, $post_fields) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
 
 	$processed_fields = site_contacts_process_fields($post_fields);
 
-	foreach ($processed_fields as $item)
-	{
-		if (!empty($item['field_id']))
-		{
+	foreach ($processed_fields as $item) {
+		if (!empty($item['field_id'])) {
 			site_contacts_update_single_field($form_id, $item);
 
 			if (($item['type'] == SITE_CONTACTS_FIELD_DROPDOWN) ||
 				($item['type'] == SITE_CONTACTS_FIELD_CHECKBOXES) ||
-				($item['type'] == SITE_CONTACTS_FIELD_RADIOBOXES))
-			{
+				($item['type'] == SITE_CONTACTS_FIELD_RADIOBOXES)) {
 				// Delete existing entries
 				$wpdb->query($wpdb->prepare('DELETE FROM `' . $table_prefix . 'field_entries` WHERE field_id = %d;', $item['field_id']));
 
 				// Resave entries for case if they are edited
-				if (!empty($item['entries']) && is_array($item['entries']))
-				{
+				if (!empty($item['entries']) && is_array($item['entries'])) {
 					$index = 1;
 
-					foreach ($item['entries'] as $entry)
-					{
-						if (!empty($entry['title']))
-						{
+					foreach ($item['entries'] as $entry) {
+						if (!empty($entry['title'])) {
 							$wpdb->query($wpdb->prepare('
 								INSERT INTO `' . $table_prefix . 'field_entries`
 									(`field_id`, `form_id`, `type`, `weight`, `name`, `title`, `value`, `data`, `config`)
@@ -1664,24 +1444,18 @@ function site_contacts_update_fields($form_id, $post_fields)
 					}
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$new_field_id = site_contacts_insert_single_field($form_id, $item);
 
 			if (($item['type'] == SITE_CONTACTS_FIELD_DROPDOWN) ||
 				($item['type'] == SITE_CONTACTS_FIELD_CHECKBOXES) ||
-				($item['type'] == SITE_CONTACTS_FIELD_RADIOBOXES))
-			{
+				($item['type'] == SITE_CONTACTS_FIELD_RADIOBOXES)) {
 				// Resave entries for case if they are edited
-				if (!empty($item['entries']) && is_array($item['entries']))
-				{
+				if (!empty($item['entries']) && is_array($item['entries'])) {
 					$index = 1;
 
-					foreach ($item['entries'] as $entry)
-					{
-						if (!empty($entry['title']))
-						{
+					foreach ($item['entries'] as $entry) {
+						if (!empty($entry['title'])) {
 							$wpdb->query($wpdb->prepare('
 								INSERT INTO `' . $table_prefix . 'field_entries`
 									(`field_id`, `form_id`, `type`, `weight`, `name`, `title`, `value`, `data`, `config`)
@@ -1697,8 +1471,7 @@ function site_contacts_update_fields($form_id, $post_fields)
 	}
 }
 
-function site_contacts_insert_form()
-{
+function site_contacts_insert_form() {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -1714,8 +1487,7 @@ function site_contacts_insert_form()
 	return $wpdb->insert_id;
 }
 
-function site_contacts_insert_single_field($new_form_id, $item)
-{
+function site_contacts_insert_single_field($new_form_id, $item) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
@@ -1729,30 +1501,24 @@ function site_contacts_insert_single_field($new_form_id, $item)
 	return $wpdb->insert_id;
 }
 
-function site_contacts_insert_fields($new_form_id, $post_fields)
-{
+function site_contacts_insert_fields($new_form_id, $post_fields) {
 	global $wpdb;
 
 	$table_prefix = $wpdb->prefix . SITE_CONTACTS_DB_PREFIX;
 
 	$processed_fields = site_contacts_process_fields($post_fields);
 
-	foreach ($processed_fields as $item)
-	{
+	foreach ($processed_fields as $item) {
 		$new_field_id = site_contacts_insert_single_field($new_form_id, $item);
 
 		if (($item['type'] == SITE_CONTACTS_FIELD_DROPDOWN) ||
 			($item['type'] == SITE_CONTACTS_FIELD_CHECKBOXES) ||
-			($item['type'] == SITE_CONTACTS_FIELD_RADIOBOXES))
-		{
-			if (!empty($item['entries']) && is_array($item['entries']))
-			{
+			($item['type'] == SITE_CONTACTS_FIELD_RADIOBOXES)) {
+			if (!empty($item['entries']) && is_array($item['entries'])) {
 				$index = 1;
 
-				foreach ($item['entries'] as $entry)
-				{
-					if (!empty($entry['title']))
-					{
+				foreach ($item['entries'] as $entry) {
+					if (!empty($entry['title'])) {
 						$wpdb->query($wpdb->prepare('
 							INSERT INTO `' . $table_prefix . 'field_entries`
 								(`field_id`, `form_id`, `type`, `weight`, `name`, `title`, `value`, `data`, `config`)
@@ -1767,28 +1533,22 @@ function site_contacts_insert_fields($new_form_id, $post_fields)
 	}
 }
 
-function site_contacts_proto_textfield($index, $field = null)
-{
+function site_contacts_proto_textfield($index, $field = null) {
 	$field_id = '';
 	$required = false;
 	$label = '';
 
-	if ((isset($field['field_id'])) && ($field['field_id']))
-	{
+	if ((isset($field['field_id'])) && ($field['field_id'])) {
 		$field_id = $field['field_id'];
 	}
 
-	if ((isset($field['required'])) && ($field['required']))
-	{
+	if ((isset($field['required'])) && ($field['required'])) {
 		$required = true;
 	}
 
-	if (isset($field['label']))
-	{
+	if (isset($field['label'])) {
 		$label = $field['label'];
-	}
-	else
-	{
+	} else {
 		$label = __('Label', 'site-contacts');
 	}
 
@@ -1826,28 +1586,22 @@ function site_contacts_proto_textfield($index, $field = null)
 	return $html;
 }
 
-function site_contacts_proto_phone($index, $field = null)
-{
+function site_contacts_proto_phone($index, $field = null) {
 	$field_id = '';
 	$required = false;
 	$label = '';
 
-	if ((isset($field['field_id'])) && ($field['field_id']))
-	{
+	if ((isset($field['field_id'])) && ($field['field_id'])) {
 		$field_id = $field['field_id'];
 	}
 
-	if ((isset($field['required'])) && ($field['required']))
-	{
+	if ((isset($field['required'])) && ($field['required'])) {
 		$required = true;
 	}
 
-	if (isset($field['label']))
-	{
+	if (isset($field['label'])) {
 		$label = $field['label'];
-	}
-	else
-	{
+	} else {
 		$label = __('Phone number', 'site-contacts');
 	}
 
@@ -1885,28 +1639,22 @@ function site_contacts_proto_phone($index, $field = null)
 	return $html;
 }
 
-function site_contacts_proto_email($index, $field = null)
-{
+function site_contacts_proto_email($index, $field = null) {
 	$field_id = '';
 	$required = false;
 	$label = '';
 
-	if ((isset($field['field_id'])) && ($field['field_id']))
-	{
+	if ((isset($field['field_id'])) && ($field['field_id'])) {
 		$field_id = $field['field_id'];
 	}
 
-	if ((isset($field['required'])) && ($field['required']))
-	{
+	if ((isset($field['required'])) && ($field['required'])) {
 		$required = true;
 	}
 
-	if (isset($field['label']))
-	{
+	if (isset($field['label'])) {
 		$label = $field['label'];
-	}
-	else
-	{
+	} else {
 		$label = __('E-mail', 'site-contacts');
 	}
 
@@ -1944,44 +1692,35 @@ function site_contacts_proto_email($index, $field = null)
 	return $html;
 }
 
-function site_contacts_proto_dropdown($index, $field = null)
-{
+function site_contacts_proto_dropdown($index, $field = null) {
 	$field_id = '';
 	$required = false;
 	$label = '';
 
-	if ((isset($field['field_id'])) && ($field['field_id']))
-	{
+	if ((isset($field['field_id'])) && ($field['field_id'])) {
 		$field_id = $field['field_id'];
 	}
 
-	if ((isset($field['required'])) && ($field['required']))
-	{
+	if ((isset($field['required'])) && ($field['required'])) {
 		$required = true;
 	}
 
-	if (isset($field['label']))
-	{
+	if (isset($field['label'])) {
 		$label = $field['label'];
-	}
-	else
-	{
+	} else {
 		$label = __('Label', 'site-contacts');
 	}
 
 	$entries_html = '';
 	$entries_text = '';
 
-	if (!empty($field['entries']) && is_array($field['entries']))
-	{
+	if (!empty($field['entries']) && is_array($field['entries'])) {
 		$entry_index = 0;
 
-		foreach ($field['entries'] as $entry)
-		{
+		foreach ($field['entries'] as $entry) {
 			$entries_html .= '<option>' . esc_html($entry['title']) . '</option>';
 
-			if ($entry_index > 0)
-			{
+			if ($entry_index > 0) {
 				$entries_text .= "\n";
 			}
 
@@ -1989,9 +1728,7 @@ function site_contacts_proto_dropdown($index, $field = null)
 
 			$entry_index++;
 		}
-	}
-	else
-	{
+	} else {
 		$entries_html = '<option>' . __('Option #1', 'site-contacts') . '</option><option>' . __('Option #2', 'site-contacts') . '</option><option>' . __('Option #3', 'site-contacts') . '</option>';
 		$entries_text = __('Option #1', 'site-contacts') . "\n" . __('Option #2', 'site-contacts') . "\n" . __('Option #3', 'site-contacts');
 	}
@@ -2038,44 +1775,35 @@ function site_contacts_proto_dropdown($index, $field = null)
 	return $html;
 }
 
-function site_contacts_proto_checkboxes($index, $field = null)
-{
+function site_contacts_proto_checkboxes($index, $field = null) {
 	$field_id = '';
 	$required = false;
 	$label = '';
 
-	if ((isset($field['field_id'])) && ($field['field_id']))
-	{
+	if ((isset($field['field_id'])) && ($field['field_id'])) {
 		$field_id = $field['field_id'];
 	}
 
-	if ((isset($field['required'])) && ($field['required']))
-	{
+	if ((isset($field['required'])) && ($field['required'])) {
 		$required = true;
 	}
 
-	if (isset($field['label']))
-	{
+	if (isset($field['label'])) {
 		$label = $field['label'];
-	}
-	else
-	{
+	} else {
 		$label = __('Label', 'site-contacts');
 	}
 
 	$entries_html = '';
 	$entries_text = '';
 
-	if (!empty($field['entries']) && is_array($field['entries']))
-	{
+	if (!empty($field['entries']) && is_array($field['entries'])) {
 		$entry_index = 0;
 
-		foreach ($field['entries'] as $entry)
-		{
+		foreach ($field['entries'] as $entry) {
 			$entries_html .= '<p><label><input type="checkbox" class="site-contacts-input-checkbox" />' . esc_html($entry['title']) . '</label></p>';
 
-			if ($entry_index > 0)
-			{
+			if ($entry_index > 0) {
 				$entries_text .= "\n";
 			}
 
@@ -2083,9 +1811,7 @@ function site_contacts_proto_checkboxes($index, $field = null)
 
 			$entry_index++;
 		}
-	}
-	else
-	{
+	} else {
 		$entries_html =	'<p><label><input type="checkbox" class="site-contacts-input-checkbox" />' . __('Option #1', 'site-contacts') . '</label></p>' .
 					'<p><label><input type="checkbox" class="site-contacts-input-checkbox" />' . __('Option #2', 'site-contacts') . '</label></p>' .
 					'<p><label><input type="checkbox" class="site-contacts-input-checkbox" />' . __('Option #3', 'site-contacts') . '</label></p>';
@@ -2133,44 +1859,35 @@ function site_contacts_proto_checkboxes($index, $field = null)
 	return $html;
 }
 
-function site_contacts_proto_radioboxes($index, $field = null)
-{
+function site_contacts_proto_radioboxes($index, $field = null) {
 	$field_id = '';
 	$required = false;
 	$label = '';
 
-	if ((isset($field['field_id'])) && ($field['field_id']))
-	{
+	if ((isset($field['field_id'])) && ($field['field_id'])) {
 		$field_id = $field['field_id'];
 	}
 
-	if ((isset($field['required'])) && ($field['required']))
-	{
+	if ((isset($field['required'])) && ($field['required'])) {
 		$required = true;
 	}
 
-	if (isset($field['label']))
-	{
+	if (isset($field['label'])) {
 		$label = $field['label'];
-	}
-	else
-	{
+	} else {
 		$label = __('Label', 'site-contacts');
 	}
 
 	$entries_html = '';
 	$entries_text = '';
 
-	if (!empty($field['entries']) && is_array($field['entries']))
-	{
+	if (!empty($field['entries']) && is_array($field['entries'])) {
 		$entry_index = 0;
 
-		foreach ($field['entries'] as $entry)
-		{
+		foreach ($field['entries'] as $entry) {
 			$entries_html .= '<p><label><input type="radio" class="site-contacts-input-radio" name="site_contacts_radio_' . $index . '" />' . esc_html($entry['title']) . '</label></p>';
 
-			if ($entry_index > 0)
-			{
+			if ($entry_index > 0) {
 				$entries_text .= "\n";
 			}
 
@@ -2178,9 +1895,7 @@ function site_contacts_proto_radioboxes($index, $field = null)
 
 			$entry_index++;
 		}
-	}
-	else
-	{
+	} else {
 		$entries_html =	'<p><label><input type="radio" class="site-contacts-input-radio" name="site_contacts_radio_' . $index . '" />' . __('Option #1', 'site-contacts') . '</label></p>' .
 					'<p><label><input type="radio" class="site-contacts-input-radio" name="site_contacts_radio_' . $index . '" />' . __('Option #2', 'site-contacts') . '</label></p>' .
 					'<p><label><input type="radio" class="site-contacts-input-radio" name="site_contacts_radio_' . $index . '" />' . __('Option #3', 'site-contacts') . '</label></p>';
@@ -2228,28 +1943,22 @@ function site_contacts_proto_radioboxes($index, $field = null)
 	return $html;
 }
 
-function site_contacts_proto_textarea($index, $field = null)
-{
+function site_contacts_proto_textarea($index, $field = null) {
 	$field_id = '';
 	$required = false;
 	$label = '';
 
-	if ((isset($field['field_id'])) && ($field['field_id']))
-	{
+	if ((isset($field['field_id'])) && ($field['field_id'])) {
 		$field_id = $field['field_id'];
 	}
 
-	if ((isset($field['required'])) && ($field['required']))
-	{
+	if ((isset($field['required'])) && ($field['required'])) {
 		$required = true;
 	}
 
-	if (isset($field['label']))
-	{
+	if (isset($field['label'])) {
 		$label = $field['label'];
-	}
-	else
-	{
+	} else {
 		$label = __('Label', 'site-contacts');
 	}
 
@@ -2287,28 +1996,22 @@ function site_contacts_proto_textarea($index, $field = null)
 	return $html;
 }
 
-function site_contacts_proto_submit($index, $field = null)
-{
+function site_contacts_proto_submit($index, $field = null) {
 	$field_id = '';
 	$required = false;
 	$title = '';
 
-	if ((isset($field['field_id'])) && ($field['field_id']))
-	{
+	if ((isset($field['field_id'])) && ($field['field_id'])) {
 		$field_id = $field['field_id'];
 	}
 
-	if ((isset($field['required'])) && ($field['required']))
-	{
+	if ((isset($field['required'])) && ($field['required'])) {
 		$required = true;
 	}
 
-	if (isset($field['title']))
-	{
+	if (isset($field['title'])) {
 		$title = $field['title'];
-	}
-	else
-	{
+	} else {
 		$title = __('Submit', 'site-contacts');
 	}
 
@@ -2338,28 +2041,22 @@ function site_contacts_proto_submit($index, $field = null)
 	return $html;
 }
 
-function site_contacts_proto_url($index, $field = null)
-{
+function site_contacts_proto_url($index, $field = null) {
 	$field_id = '';
 	$required = false;
 	$label = '';
 
-	if ((isset($field['field_id'])) && ($field['field_id']))
-	{
+	if ((isset($field['field_id'])) && ($field['field_id'])) {
 		$field_id = $field['field_id'];
 	}
 
-	if ((isset($field['required'])) && ($field['required']))
-	{
+	if ((isset($field['required'])) && ($field['required'])) {
 		$required = true;
 	}
 
-	if (isset($field['label']))
-	{
+	if (isset($field['label'])) {
 		$label = $field['label'];
-	}
-	else
-	{
+	} else {
 		$label = __('Web address', 'site-contacts');
 	}
 
@@ -2397,8 +2094,7 @@ function site_contacts_proto_url($index, $field = null)
 	return $html;
 }
 
-function site_contacts_field_wrap($index)
-{
+function site_contacts_field_wrap($index) {
 	$field_wrap = array();
 
 	$field_wrap['before'] = '<div class="site-contacts-form-row">
@@ -2415,14 +2111,11 @@ function site_contacts_field_wrap($index)
 	return $field_wrap;
 }
 
-function site_contacts_field_proto($index, $field = null)
-{
+function site_contacts_field_proto($index, $field = null) {
 	$field_wrap = site_contacts_field_wrap($index);
 
-	if (!empty($field['type']))
-	{
-		switch ($field['type'])
-		{
+	if (!empty($field['type'])) {
+		switch ($field['type']) {
 			case SITE_CONTACTS_FIELD_TEXTFIELD:
 					return $field_wrap['before'] . site_contacts_proto_textfield($index, $field) . $field_wrap['after'];
 				break;
@@ -2464,8 +2157,7 @@ function site_contacts_field_proto($index, $field = null)
 	return null;
 }
 
-function site_contacts_validate_form()
-{
+function site_contacts_validate_form() {
 	$error = null;
 
 	// We allow empty form for now
@@ -2473,12 +2165,9 @@ function site_contacts_validate_form()
 	return $error;
 }
 
-function site_contacts_field_buttons($field_list)
-{
-	foreach($field_list as $item)
-	{
-		if ((!empty($item['label'])) && (!empty($item['id'])))
-		{
+function site_contacts_field_buttons($field_list) {
+	foreach($field_list as $item) {
+		if ((!empty($item['label'])) && (!empty($item['id']))) {
 ?>
 					<div class="site-contacts-field-wrapper<?php if (!empty($item['class'])) echo ' ' . $item['class'] ?>">
 						<div class="site-contacts-field-container">
@@ -2493,8 +2182,7 @@ function site_contacts_field_buttons($field_list)
 	}
 }
 
-function site_contacts_tab_fields($active, $forms_list_url, $contact_form)
-{
+function site_contacts_tab_fields($active, $forms_list_url, $contact_form) {
 ?>
 <div class="site-contacts-main site-contacts-tab-fields<?php if ($active == false){echo ' site-contacts-hidden';}?>">
 <?php
@@ -2502,30 +2190,22 @@ function site_contacts_tab_fields($active, $forms_list_url, $contact_form)
 	// Prepare form variables
 	$form_title = '';
 
-	if (!empty($_POST['site_contacts_title']))
-	{
+	if (!empty($_POST['site_contacts_title'])) {
 		$form_title = esc_html(wp_unslash($_POST['site_contacts_title']));
-	}
-	else if ($contact_form != null)
-	{
+	} else if ($contact_form != null) {
 		$form_title = esc_html($contact_form['form']['title']);
 	}
 
 	// Load existing fields
 	$fields = array();
 
-	if (!empty($_POST['site_contacts_save_form']) && ($_POST['site_contacts_save_form'] == 'yes'))
-	{
+	if (!empty($_POST['site_contacts_save_form']) && ($_POST['site_contacts_save_form'] == 'yes')) {
 		$post_fields = site_contacts_get_post_fields();
 
 		$fields = site_contacts_process_fields($post_fields);
-	}
-	else
-	{
-		if (($contact_form != null) && (!empty($contact_form['fields'])) && is_array($contact_form['fields']))
-		{
-			foreach ($contact_form['fields'] as $item)
-			{
+	} else {
+		if (($contact_form != null) && (!empty($contact_form['fields'])) && is_array($contact_form['fields'])) {
+			foreach ($contact_form['fields'] as $item) {
 				$fields[] = $item;
 			}
 		}
@@ -2533,8 +2213,7 @@ function site_contacts_tab_fields($active, $forms_list_url, $contact_form)
 ?>
 	<div class="site-contacts-content">
 <?php
-	if ($contact_form != null)
-	{
+	if ($contact_form != null) {
 ?>
 				<input type="hidden" name="site_contacts_id" value="<?php echo $contact_form['form']['id']; ?>"/>
 <?php
@@ -2549,22 +2228,17 @@ function site_contacts_tab_fields($active, $forms_list_url, $contact_form)
 
 	$index = 1;
 
-	if (!empty($fields))
-	{
-		foreach ($fields as $item)
-		{
+	if (!empty($fields)) {
+		foreach ($fields as $item) {
 			$field_proto = site_contacts_field_proto($index, $item);
 
-			if (!empty($field_proto))
-			{
+			if (!empty($field_proto)) {
 				echo $field_proto;
 			}
 
 			$index++;
 		}
-	}
-	else
-	{
+	} else {
 ?>
 					<div class="site-contacts-placeholder"><p><?php _e('Please add some fields to this form by dragging them from the right sidebar.', 'site-contacts'); ?></p></div>
 <?php
@@ -2634,35 +2308,25 @@ function site_contacts_tab_fields($active, $forms_list_url, $contact_form)
 <?php
 }
 
-function site_contacts_tab_settings($active, $forms_list_url, $contact_form = null)
-{
+function site_contacts_tab_settings($active, $forms_list_url, $contact_form = null) {
 	$notification = array();
 	$messages = array();
 
-	if (!empty($_POST['site_contacts_save_form']) && ($_POST['site_contacts_save_form'] == 'yes'))
-	{
+	if (!empty($_POST['site_contacts_save_form']) && ($_POST['site_contacts_save_form'] == 'yes')) {
 		$post_config = site_contacts_get_post_config_data();
 
 		$notification = wp_parse_args($post_config['notification'], site_contacts_default_notification());
 		$messages = wp_parse_args($post_config['messages'], site_contacts_default_messages());
-	}
-	else
-	{
-		if ($contact_form && isset($contact_form['form']['config']['notification']))
-		{
+	} else {
+		if ($contact_form && isset($contact_form['form']['config']['notification'])) {
 			$notification = wp_parse_args($contact_form['form']['config']['notification'], site_contacts_default_notification());
-		}
-		else
-		{
+		} else {
 			$notification = site_contacts_default_notification();
 		}
 
-		if ($contact_form && isset($contact_form['form']['config']['messages']))
-		{
+		if ($contact_form && isset($contact_form['form']['config']['messages'])) {
 			$messages = wp_parse_args($contact_form['form']['config']['messages'], site_contacts_default_messages());
-		}
-		else
-		{
+		} else {
 			$messages = site_contacts_default_messages();
 		}
 	}
@@ -2699,8 +2363,7 @@ function site_contacts_tab_settings($active, $forms_list_url, $contact_form = nu
 <?php
 }
 
-function site_contacts_proto_regular($fields_proto)
-{
+function site_contacts_proto_regular($fields_proto) {
 	$fields_proto[SITE_CONTACTS_FIELD_TEXTFIELD] = site_contacts_proto_textfield(SITE_CONTACTS_INDEX_TEMPLATE);
 	$fields_proto[SITE_CONTACTS_FIELD_PHONE] = site_contacts_proto_phone(SITE_CONTACTS_INDEX_TEMPLATE);
 	$fields_proto[SITE_CONTACTS_FIELD_EMAIL] = site_contacts_proto_email(SITE_CONTACTS_INDEX_TEMPLATE);
@@ -2714,14 +2377,12 @@ function site_contacts_proto_regular($fields_proto)
 	return $fields_proto;
 }
 
-function site_contacts_proto_scripts()
-{
+function site_contacts_proto_scripts() {
 	$field_wrap = site_contacts_field_wrap(SITE_CONTACTS_INDEX_TEMPLATE);
 
 	$fields_proto = array();
 
-	if ((!empty($field_wrap['before'])) && (!empty($field_wrap['after'])))
-	{
+	if ((!empty($field_wrap['before'])) && (!empty($field_wrap['after']))) {
 		$fields_proto['before'] = $field_wrap['before'];
 		$fields_proto['after'] = $field_wrap['after'];
 	}
@@ -2735,26 +2396,20 @@ function site_contacts_proto_scripts()
 <?php
 }
 
-function site_contacts_edit_scripts()
-{
+function site_contacts_edit_scripts() {
 ?>
 <script type="text/javascript">
-jQuery(document).ready(function($)
-{
-	function site_contacts_get_next_id()
-	{
+jQuery(document).ready(function($) {
+	function site_contacts_get_next_id() {
 		var next_id = 1;
 
-		$('div.site-contacts-form-row div.site-contacts-meta input').each(function(index, element)
-		{
+		$('div.site-contacts-form-row div.site-contacts-meta input').each(function(index, element) {
 			var field_name = $(element).attr('name');
 
-			if (field_name && field_name.length > 0)
-			{
+			if (field_name && field_name.length > 0) {
 				var field_weight = parseInt(field_name.replace('site_contacts_option_weight_', ''));
 
-				if (field_weight >= next_id)
-				{
+				if (field_weight >= next_id) {
 					next_id = field_weight + 1;
 				}
 			}
@@ -2763,26 +2418,22 @@ jQuery(document).ready(function($)
 		return next_id;
 	}
 
-	function site_contacts_field_prototype(field_type)
-	{
+	function site_contacts_field_prototype(field_type) {
 		var field_html = '';
 
 		var field_unique_id = site_contacts_get_next_id();
 
 		var field_order = $('div.site-contacts-form-row').length + 1;
 
-		if (typeof site_contacts_fields_proto != 'undefined')
-		{
+		if (typeof site_contacts_fields_proto != 'undefined') {
 			var field_before = '';
 			var field_after = '';
 
-			if (typeof site_contacts_fields_proto.before != 'undefined')
-			{
+			if (typeof site_contacts_fields_proto.before != 'undefined') {
 				field_before = site_contacts_fields_proto.before;
 			}
 
-			if (typeof site_contacts_fields_proto.after != 'undefined')
-			{
+			if (typeof site_contacts_fields_proto.after != 'undefined') {
 				field_after = site_contacts_fields_proto.after;
 			}
 
@@ -2794,31 +2445,26 @@ jQuery(document).ready(function($)
 		return field_html;
 	}
 
-	function site_contacts_dropdown_change(sender)
-	{
+	function site_contacts_dropdown_change(sender) {
 		var select_element = $(sender).closest('div.site-contacts-form-row').find('div.site-contacts-field-prototype select');
 
 		var select_element_id = select_element.attr('id');
 
 		var new_container = jQuery('<select class="site-contacts-select"></select>');
 
-		if (typeof select_element_id !== 'undefined')
-		{
+		if (typeof select_element_id !== 'undefined') {
 			new_container.attr('id', select_element_id);
 		}
 
 		var options_list = $(sender).val();
 
-		if (options_list && (options_list.length > 0))
-		{
+		if (options_list && (options_list.length > 0)) {
 			options_list = options_list.replace('/\r/g', '');
 
 			options_list_array = options_list.split('\n');
 
-			for (var index = 0; index < options_list_array.length; ++index)
-			{
-				if (options_list_array[index].length > 0)
-				{
+			for (var index = 0; index < options_list_array.length; ++index) {
+				if (options_list_array[index].length > 0) {
 					jQuery('<option></option>').text(options_list_array[index]).appendTo(new_container);
 				}
 			}
@@ -2827,24 +2473,20 @@ jQuery(document).ready(function($)
 		select_element.replaceWith(new_container);
 	}
 
-	function site_contacts_checkboxes_change(sender)
-	{
+	function site_contacts_checkboxes_change(sender) {
 		var container_element = $(sender).closest('div.site-contacts-form-row').find('div.site-contacts-field-prototype div.site-contacts-field-body');
 
 		var new_container = jQuery('<div class="site-contacts-field-body"></div>');
 
 		var options_list = $(sender).val();
 
-		if (options_list && (options_list.length > 0))
-		{
+		if (options_list && (options_list.length > 0)) {
 			options_list = options_list.replace('/\r/g', '');
 
 			options_list_array = options_list.split('\n');
 
-			for (var index = 0; index < options_list_array.length; ++index)
-			{
-				if (options_list_array[index].length > 0)
-				{
+			for (var index = 0; index < options_list_array.length; ++index) {
+				if (options_list_array[index].length > 0) {
 					var label_element = jQuery('<label></label>').text(options_list_array[index]);
 
 					label_element.prepend('<input type="checkbox" class="site-contacts-input-checkbox" />');
@@ -2859,16 +2501,14 @@ jQuery(document).ready(function($)
 		container_element.replaceWith(new_container);
 	}
 
-	function site_contacts_radioboxes_change(sender)
-	{
+	function site_contacts_radioboxes_change(sender) {
 		var container_element = $(sender).closest('div.site-contacts-form-row').find('div.site-contacts-field-prototype div.site-contacts-field-body');
 
 		var new_container = jQuery('<div class="site-contacts-field-body"></div>');
 
 		var options_list = $(sender).val();
 
-		if (options_list && (options_list.length > 0))
-		{
+		if (options_list && (options_list.length > 0)) {
 			options_list = options_list.replace('/\r/g', '');
 
 			options_list_array = options_list.split('\n');
@@ -2877,15 +2517,12 @@ jQuery(document).ready(function($)
 
 			var textarea_name = $(sender).attr('name');
 
-			if (textarea_name && (textarea_name.length > 0))
-			{
+			if (textarea_name && (textarea_name.length > 0)) {
 				field_unique_id = parseInt(textarea_name.replace('site_contacts_option_entries_', ''));
 			}
 
-			for (var index = 0; index < options_list_array.length; ++index)
-			{
-				if (options_list_array[index].length > 0)
-				{
+			for (var index = 0; index < options_list_array.length; ++index) {
+				if (options_list_array[index].length > 0) {
 					var label_element = jQuery('<label></label>').text(options_list_array[index]);
 
 					label_element.prepend('<input type="radio" class="site-contacts-input-radio" name="site_contacts_radio_' + field_unique_id + '" />');
@@ -2900,14 +2537,11 @@ jQuery(document).ready(function($)
 		container_element.replaceWith(new_container);
 	}
 
-	$('div.site-contacts-choose-fields div.site-contacts-field-container').click(function()
-	{
+	$('div.site-contacts-choose-fields div.site-contacts-field-container').click(function() {
 		var field_type_element = $(this).find('input');
 
-		if (field_type_element.length > 0)
-		{
-			if ($('div.site-contacts-form-fields div.site-contacts-placeholder').length > 0)
-			{
+		if (field_type_element.length > 0) {
+			if ($('div.site-contacts-form-fields div.site-contacts-placeholder').length > 0) {
 				$('div.site-contacts-form-fields div.site-contacts-placeholder').remove();
 			}
 
@@ -2921,14 +2555,11 @@ jQuery(document).ready(function($)
 		items: 'div.site-contacts-form-row',
 		axis: 'y',
 		handle: '.site-contacts-handle',
-		receive: function (event, ui)
-		{
-			$('div.site-contacts-form-fields div.site-contacts-field-container').each(function(index, element)
-			{
+		receive: function (event, ui) {
+			$('div.site-contacts-form-fields div.site-contacts-field-container').each(function(index, element) {
 				var field_type_element = $(this).find('input');
 
-				if (field_type_element.length > 0)
-				{
+				if (field_type_element.length > 0) {
 					var field_type = parseInt(field_type_element.val());
 
 					var field_html = site_contacts_field_prototype(field_type);
@@ -2937,24 +2568,18 @@ jQuery(document).ready(function($)
 				}
 			});
 		},
-		over: function(event, ui)
-		{
-			if ($('div.site-contacts-form-fields div.site-contacts-placeholder').length > 0)
-			{
+		over: function(event, ui) {
+			if ($('div.site-contacts-form-fields div.site-contacts-placeholder').length > 0) {
 				$('div.site-contacts-form-fields div.site-contacts-placeholder').remove();
 			}
 		},
-		out: function(event, ui)
-		{
-			if ($('div.site-contacts-form-fields div.site-contacts-form-row').length <= 0)
-			{
+		out: function(event, ui) {
+			if ($('div.site-contacts-form-fields div.site-contacts-form-row').length <= 0) {
 				$('div.site-contacts-form-fields').append('<div class="site-contacts-placeholder"><p><?php _e("Please add some fields to this form by dragging them from the right sidebar.", "site-contacts"); ?></p></div>');
 			}
 		},
-		stop: function(event, ui)
-		{
-			$('div.site-contacts-form-fields div.site-contacts-form-row').each(function(index, element)
-			{
+		stop: function(event, ui) {
+			$('div.site-contacts-form-fields div.site-contacts-form-row').each(function(index, element) {
 				$(this).find('div.site-contacts-meta input').val(index);
 			});
 		}
@@ -2966,8 +2591,7 @@ jQuery(document).ready(function($)
 		helper: 'clone',
 	});
 
-	$('div.site-contacts-form-fields').on('click', 'a.site-contacts-configure', function(event)
-	{
+	$('div.site-contacts-form-fields').on('click', 'a.site-contacts-configure', function(event) {
 		event.preventDefault();
 
 		$(this).toggleClass('site-contacts-active');
@@ -2975,31 +2599,25 @@ jQuery(document).ready(function($)
 		$(this).closest('div.site-contacts-form-row').find('div.site-contacts-field-options').toggleClass('site-contacts-hidden');
 	});
 
-	$('div.site-contacts-form-fields').on('click', 'a.site-contacts-remove', function(event)
-	{
+	$('div.site-contacts-form-fields').on('click', 'a.site-contacts-remove', function(event) {
 		event.preventDefault();
 
-		if (confirm('<?php _e("Are you sure?", "site-contacts") ?>'))
-		{
-			if ($(this).closest('div.site-contacts-form-row').length > 0)
-			{
+		if (confirm('<?php _e("Are you sure?", "site-contacts") ?>')) {
+			if ($(this).closest('div.site-contacts-form-row').length > 0) {
 				$(this).closest('div.site-contacts-form-row').remove();
 
-				if ($('div.site-contacts-form-fields div.site-contacts-form-row').length <= 0)
-				{
+				if ($('div.site-contacts-form-fields div.site-contacts-form-row').length <= 0) {
 					$('div.site-contacts-form-fields').append('<div class="site-contacts-placeholder"><p><?php _e("Please add some fields to this form by dragging them from the right sidebar.", "site-contacts"); ?></p></div>');
 				}
 			}
 		}
 	});
 
-	$('div.site-contacts-form-fields').on('click', 'a.site-contacts-handle', function(event)
-	{
+	$('div.site-contacts-form-fields').on('click', 'a.site-contacts-handle', function(event) {
 		event.preventDefault();
 	});
 
-	$('div.site-contacts-form-fields').on('click', 'a.site-contacts-close', function(event)
-	{
+	$('div.site-contacts-form-fields').on('click', 'a.site-contacts-close', function(event) {
 		event.preventDefault();
 
 		var form_row = $(this).closest('div.site-contacts-form-row');
@@ -3009,25 +2627,21 @@ jQuery(document).ready(function($)
 		form_row.find('div.site-contacts-field-options').addClass('site-contacts-hidden');
 	});
 
-	$('div.site-contacts-form-fields').on('keyup', 'div.site-contacts-option-type-label input', function(event)
-	{
+	$('div.site-contacts-form-fields').on('keyup', 'div.site-contacts-option-type-label input', function(event) {
 		var new_value = $(this).val();
 
 		var form_row = $(this).closest('div.site-contacts-form-row');
 
 		form_row.find('div.site-contacts-field-label label').text(new_value);
 
-		if (form_row.find('div.site-contacts-option-type-required input').is(':checked'))
-		{
-			if (!form_row.find('div.site-contacts-field-label label').hasClass('site-contacts-optional'))
-			{
+		if (form_row.find('div.site-contacts-option-type-required input').is(':checked')) {
+			if (!form_row.find('div.site-contacts-field-label label').hasClass('site-contacts-optional')) {
 				form_row.find('div.site-contacts-field-label label').append('<span class="site-contacts-required">*</span>');
 			}
 		}
 	});
 
-	$('div.site-contacts-form-fields').on('keyup', 'div.site-contacts-option-type-sublabel input', function(event)
-	{
+	$('div.site-contacts-form-fields').on('keyup', 'div.site-contacts-option-type-sublabel input', function(event) {
 		var new_value = $(this).val();
 
 		var form_row = $(this).closest('div.site-contacts-form-row');
@@ -3037,42 +2651,31 @@ jQuery(document).ready(function($)
 		form_row.find('div.site-contacts-field-sublabel label#' + element_id).text(new_value);
 	});
 
-	$('div.site-contacts-form-fields').on('keyup', 'div.site-contacts-option-type-button-title input', function(event)
-	{
+	$('div.site-contacts-form-fields').on('keyup', 'div.site-contacts-option-type-button-title input', function(event) {
 		var new_value = $(this).val();
 
 		$(this).closest('div.site-contacts-form-row').find('div.site-contacts-field-prototype div.site-contacts-field-body input').val(new_value);
 	});
 
-	$('div.site-contacts-form-fields').on('click', 'div.site-contacts-option-type-required input', function(event)
-	{
-		if ($(this).is(':checked'))
-		{
-			$(this).closest('div.site-contacts-form-row').find('div.site-contacts-field-label label').each(function()
-			{
-				if (!$(this).hasClass('site-contacts-optional'))
-				{
+	$('div.site-contacts-form-fields').on('click', 'div.site-contacts-option-type-required input', function(event) {
+		if ($(this).is(':checked')) {
+			$(this).closest('div.site-contacts-form-row').find('div.site-contacts-field-label label').each(function() {
+				if (!$(this).hasClass('site-contacts-optional')) {
 					$(this).append('<span class="site-contacts-required">*</span>');
 				}
 			});
-		}
-		else
-		{
+		} else {
 			$(this).closest('div.site-contacts-form-row').find('div.site-contacts-field-label label span.site-contacts-required').remove();
 		}
 	});
 
-	$('div.site-contacts-tabs li a').click(function(event)
-	{
+	$('div.site-contacts-tabs li a').click(function(event) {
 		event.preventDefault();
 
-		if ($(this).hasClass('site-contacts-link-fields'))
-		{
+		if ($(this).hasClass('site-contacts-link-fields')) {
 			$('div.site-contacts-tab-fields').removeClass('site-contacts-hidden');
 			$('div.site-contacts-tab-settings').addClass('site-contacts-hidden');
-		}
-		else if ($(this).hasClass('site-contacts-link-settings'))
-		{
+		} else if ($(this).hasClass('site-contacts-link-settings')) {
 			$('div.site-contacts-tab-fields').addClass('site-contacts-hidden');
 			$('div.site-contacts-tab-settings').removeClass('site-contacts-hidden');
 		}
@@ -3081,18 +2684,15 @@ jQuery(document).ready(function($)
 		$(this).parent().addClass('site-contacts-active');
 	});
 
-	$('div.site-contacts-form-fields').on('keyup', 'div.site-contacts-field-dropdown div.site-contacts-option-type-entries textarea', function(event)
-	{
+	$('div.site-contacts-form-fields').on('keyup', 'div.site-contacts-field-dropdown div.site-contacts-option-type-entries textarea', function(event) {
 		site_contacts_dropdown_change(this);
 	});
 
-	$('div.site-contacts-form-fields').on('keyup', 'div.site-contacts-field-checkboxes div.site-contacts-option-type-entries textarea', function(event)
-	{
+	$('div.site-contacts-form-fields').on('keyup', 'div.site-contacts-field-checkboxes div.site-contacts-option-type-entries textarea', function(event) {
 		site_contacts_checkboxes_change(this);
 	});
 
-	$('div.site-contacts-form-fields').on('keyup', 'div.site-contacts-field-radioboxes div.site-contacts-option-type-entries textarea', function(event)
-	{
+	$('div.site-contacts-form-fields').on('keyup', 'div.site-contacts-field-radioboxes div.site-contacts-option-type-entries textarea', function(event) {
 		site_contacts_radioboxes_change(this);
 	});
 });
@@ -3100,26 +2700,21 @@ jQuery(document).ready(function($)
 <?php
 }
 
-function site_contacts_edit_form($forms_list_url, $contact_form = null, $error = null)
-{
+function site_contacts_edit_form($forms_list_url, $contact_form = null, $error = null) {
 	$active_tab = 'fields';
 
-	if ($contact_form == null)
-	{
+	if ($contact_form == null) {
 ?>
 <h3><?php _e('Add new contact form.', 'site-contacts'); ?></h3>
 <?php
-	}
-	else
-	{
+	} else {
 ?>
 <h3><?php _e('Edit your existing contact form.', 'site-contacts'); ?></h3>
 <?php
 	}
 
 	// Show error message
-	if (!empty($error))
-	{
+	if (!empty($error)) {
 ?>
 	<div class="site-contacts-error-container">
 		<div class="site-contacts-error"><?php echo $error; ?></div>
@@ -3139,13 +2734,10 @@ function site_contacts_edit_form($forms_list_url, $contact_form = null, $error =
 	<input type="hidden" name="site_contacts_save_form" value="yes" />
 <?php
 
-	if ($active_tab == 'fields')
-	{
+	if ($active_tab == 'fields') {
 		site_contacts_tab_fields(true, $forms_list_url, $contact_form);
 		site_contacts_tab_settings(false, $forms_list_url, $contact_form);
-	}
-	else
-	{
+	} else {
 		site_contacts_tab_fields(false, $forms_list_url, $contact_form);
 		site_contacts_tab_settings(true, $forms_list_url, $contact_form);
 	}
@@ -3161,21 +2753,18 @@ function site_contacts_edit_form($forms_list_url, $contact_form = null, $error =
 	return false;
 }
 
-function site_contacts_form_list($forms_list_url)
-{
+function site_contacts_form_list($forms_list_url) {
 	$total_items = site_contacts_get_all_count();
 
 	$items_per_page = 10;
 	$current_page = 1;
 	$total_pages = floor($total_items / $items_per_page);
 
-	if (($total_items % $items_per_page) > 0)
-	{
+	if (($total_items % $items_per_page) > 0) {
 		$total_pages++;
 	}
 
-	if (!empty($_GET['subpage']))
-	{
+	if (!empty($_GET['subpage'])) {
 		$current_page = intval($_GET['subpage']);
 	}
 
@@ -3210,8 +2799,7 @@ function site_contacts_form_list($forms_list_url)
 
 	$page_links = paginate_links($pagelink_args);
 
-	if (!empty($page_links))
-	{
+	if (!empty($page_links)) {
 ?>
 		<p><?php echo $page_links ?></p>
 <?php
@@ -3228,29 +2816,22 @@ function site_contacts_form_list($forms_list_url)
 			</tr>
 <?php
 
-	if (empty($contact_forms) || !is_array($contact_forms) || (count($contact_forms) <= 0))
-	{
+	if (empty($contact_forms) || !is_array($contact_forms) || (count($contact_forms) <= 0)) {
 ?>
 			<tr>
 				<td colspan="5"><p><?php _e('Currently, you do not have any contact forms.', 'site-contacts'); ?></p></td>
 			</tr>
 <?php
-	}
-	else
-	{
-		foreach ($contact_forms as $form)
-		{
+	} else {
+		foreach ($contact_forms as $form) {
 ?>
 			<tr>
 				<td class="site-contacts-td-id"><?php echo $form['id']; ?></td>
 				<td class="site-contacts-td-title"><?php
 
-					if (!empty($form['title']))
-					{
+					if (!empty($form['title'])) {
 						echo esc_html($form['title']);
-					}
-					else
-					{
+					} else {
 						echo __('(No title)', 'site-contacts');
 					}
 
@@ -3271,8 +2852,7 @@ function site_contacts_form_list($forms_list_url)
 
 	$page_links = paginate_links($pagelink_args);
 
-	if (!empty($page_links))
-	{
+	if (!empty($page_links)) {
 ?>
 		<p><?php echo $page_links ?></p>
 <?php
@@ -3290,8 +2870,7 @@ function site_contacts_form_list($forms_list_url)
 <?php
 }
 
-function site_contacts_page()
-{
+function site_contacts_page() {
 	$forms_list_url = add_query_arg(array('page' => SITE_CONTACTS_ADMIN_PAGE), strtok($_SERVER['REQUEST_URI'], '?'));
 
 	$show_form_list = true;
@@ -3299,14 +2878,11 @@ function site_contacts_page()
 <h1><?php _e('Site Contacts', 'site-contacts'); ?></h1>
 <?php
 
-	if (!empty($_POST['site_contacts_save_form']) && ($_POST['site_contacts_save_form'] == 'yes'))
-	{
+	if (!empty($_POST['site_contacts_save_form']) && ($_POST['site_contacts_save_form'] == 'yes')) {
 		$error = site_contacts_validate_form();
 
-		if (empty($error))
-		{
-			if (!empty($_POST['site_contacts_id']))
-			{
+		if (empty($error)) {
+			if (!empty($_POST['site_contacts_id'])) {
 				$form_id = intval($_POST['site_contacts_id']);
 
 				site_contacts_update_form($form_id);
@@ -3316,22 +2892,17 @@ function site_contacts_page()
 				site_contacts_check_fields($form_id, $post_fields);
 
 				site_contacts_update_fields($form_id, $post_fields);
-			}
-			else
-			{
+			} else {
 				$new_form_id = site_contacts_insert_form();
 
 				$post_fields = site_contacts_get_post_fields();
 
 				site_contacts_insert_fields($new_form_id, $post_fields);
 			}
-		}
-		else
-		{
+		} else {
 			$contact_form = null;
 
-			if (!empty($_POST['site_contacts_id']))
-			{
+			if (!empty($_POST['site_contacts_id'])) {
 				$contact_form = site_contacts_get($_POST['site_contacts_id']);
 			}
 
@@ -3342,21 +2913,15 @@ function site_contacts_page()
 	}
 
 	// Render specific pages depending on context
-	if (!empty($_GET['add']) && ($_GET['add'] == 'yes'))
-	{
+	if (!empty($_GET['add']) && ($_GET['add'] == 'yes')) {
 		$show_form_list = site_contacts_edit_form($forms_list_url);
-	}
-	else if (!empty($_GET['edit']))
-	{
+	} else if (!empty($_GET['edit'])) {
 		// Loading existing data if we are editing contact form
 		$contact_form = site_contacts_get($_GET['edit']);
 
-		if (!empty($contact_form) && is_array($contact_form))
-		{
+		if (!empty($contact_form) && is_array($contact_form)) {
 			$show_form_list = site_contacts_edit_form($forms_list_url, $contact_form);
-		}
-		else
-		{
+		} else {
 ?>
 <h3><?php _e('Edit your existing contact form.', 'site-contacts'); ?></h3>
 
@@ -3368,11 +2933,9 @@ function site_contacts_page()
 		}
 	}
 
-	if ($show_form_list)
-	{
+	if ($show_form_list) {
 		// Delete contact form if that is required
-		if (!empty($_GET['delete']))
-		{
+		if (!empty($_GET['delete'])) {
 			site_contacts_delete_form($_GET['delete']);
 		}
 
@@ -3380,25 +2943,18 @@ function site_contacts_page()
 	}
 }
 
-function site_contacts_settings_page()
-{
+function site_contacts_settings_page() {
 	$site_contacts_remove_db = false;
 
-	if (!empty($_POST['site_contacts_save_settings']) && ($_POST['site_contacts_save_settings'] == 'yes'))
-	{
-		if (site_contacts_checked('site_contacts_remove_db'))
-		{
+	if (!empty($_POST['site_contacts_save_settings']) && ($_POST['site_contacts_save_settings'] == 'yes')) {
+		if (site_contacts_checked('site_contacts_remove_db')) {
 			$site_contacts_remove_db = true;
-		}
-		else
-		{
+		} else {
 			$site_contacts_remove_db = false;
 		}
 
 		update_option('site_contacts_remove_db', $site_contacts_remove_db);
-	}
-	else
-	{
+	} else {
 		$site_contacts_remove_db = get_option('site_contacts_remove_db', false);
 	}
 
@@ -3424,5 +2980,3 @@ function site_contacts_settings_page()
 </div>
 <?php
 }
-
-?>

@@ -1,46 +1,38 @@
-.site-contacts-row
-{
+.site-contacts-row {
 	margin: 0px -15px;
 }
 
-.site-contacts-row::after
-{
+.site-contacts-row::after {
 	content: " ";
 	display: block;
 	clear: both;
 }
 
-.site-contacts-fullwidth
-{
+.site-contacts-fullwidth {
 	box-sizing: border-box;
 	padding: 0px 15px;
 }
 
-.site-contacts-half
-{
+.site-contacts-half {
 	float: left;
 	width: 50%;
 	box-sizing: border-box;
 	padding: 0px 15px;
 }
 
-.site-contacts-hidden
-{
+.site-contacts-hidden {
 	display: none;
 }
 
-.site-contacts-clear
-{
+.site-contacts-clear {
 	clear: both;
 }
 
-.site-contacts-meta
-{
+.site-contacts-meta {
 	display: none;
 }
 
-.site-contacts-tabs
-{
+.site-contacts-tabs {
 	background: #ffffff;
 	padding: 15px;
 	margin: 0px 25px 20px 0px;
@@ -48,38 +40,32 @@
 	border: 2px solid #e0e0e0;
 }
 
-.site-contacts-tabs ul
-{
+.site-contacts-tabs ul {
 	padding: 0px;
 	margin: 0px;
 }
 
-.site-contacts-tabs ul li
-{
+.site-contacts-tabs ul li {
 	font-size: 110%;
 	display: inline;
 	margin: 0em 1em 0em 0em;
 }
 
-.site-contacts-tabs ul li a
-{
+.site-contacts-tabs ul li a {
 	text-decoration: none;
 }
 
-.site-contacts-tabs ul li.site-contacts-active a
-{
+.site-contacts-tabs ul li.site-contacts-active a {
 	font-weight: bold;
 	text-decoration: underline;
 }
 
-.site-contacts-tab-settings .site-contacts-input-text
-{
+.site-contacts-tab-settings .site-contacts-input-text {
 	width: 600px;
 	max-width: 100%;
 }
 
-.site-contacts-error-container
-{
+.site-contacts-error-container {
 	background: #ffffff;
 	padding: 15px;
 	margin: 0px 25px 20px 0px;
@@ -87,68 +73,56 @@
 	border: 2px solid #f0b0b0;
 }
 
-.site-contacts-error
-{
+.site-contacts-error {
 	font-size: 110%;
 	color: #e06060;
 }
 
-span.site-contacts-required
-{
+span.site-contacts-required {
 	color: #e02020;
 	margin: 0em 0em 0em 0.2em;
 }
 
-.site-contacts-form-row
-{
+.site-contacts-form-row {
 	margin: 0px 0px 20px 0px;
 	clear: both;
 }
 
-.site-contacts-form-row:last-child
-{
+.site-contacts-form-row:last-child {
 	margin: 0px;
 }
 
-.site-contacts-form-buttons
-{
+.site-contacts-form-buttons {
 	margin: 0px 0px 25px 0px;
 }
 
-.site-contacts-field
-{
+.site-contacts-field {
 	width: 80%;
 	max-width: 650px;
 }
 
-.site-contacts-field-prototype
-{
+.site-contacts-field-prototype {
 	background: #ffffff;
 }
 
-.site-contacts-field-prototype .site-contacts-row
-{
+.site-contacts-field-prototype .site-contacts-row {
 	margin-bottom: 15px;
 }
 
-.site-contacts-field-prototype .site-contacts-row:last-child
-{
+.site-contacts-field-prototype .site-contacts-row:last-child {
 	margin-bottom: 0px;
 }
 
-.site-contacts-field-label
-{
+.site-contacts-field-label {
 	margin: 0px 0px 10px 0px;
 	font-weight: bold;
 }
 
-.site-contacts-field-control
-{
+.site-contacts-field-control {
 	float: right;
 }
 
-.site-contacts-field-control a
-{
+.site-contacts-field-control a {
 	background: url('../images/sprite.png') no-repeat;
 	margin: 0px 0px 0px 4px;
 	display: block;
@@ -158,48 +132,39 @@ span.site-contacts-required
 	transition: none;
 }
 
-.site-contacts-field-control a.site-contacts-configure
-{
+.site-contacts-field-control a.site-contacts-configure {
 	background-position: -16px -80px;
 }
 
-.site-contacts-field-control a.site-contacts-configure:hover
-{
+.site-contacts-field-control a.site-contacts-configure:hover {
 	background-position: -80px -80px;
 }
 
-.site-contacts-field-control a.site-contacts-configure.site-contacts-active
-{
+.site-contacts-field-control a.site-contacts-configure.site-contacts-active {
 	background-position: -16px -144px;
 }
 
-.site-contacts-field-control a.site-contacts-configure.site-contacts-active:hover
-{
+.site-contacts-field-control a.site-contacts-configure.site-contacts-active:hover {
 	background-position: -80px -144px;
 }
 
-.site-contacts-field-control a.site-contacts-remove
-{
+.site-contacts-field-control a.site-contacts-remove {
 	background-position: -16px -16px;
 }
 
-.site-contacts-field-control a.site-contacts-remove:hover
-{
+.site-contacts-field-control a.site-contacts-remove:hover {
 	background-position: -80px -16px;
 }
 
-.site-contacts-field-control a.site-contacts-handle
-{
+.site-contacts-field-control a.site-contacts-handle {
 	background-position: -144px -16px;
 }
 
-.site-contacts-field-control a.site-contacts-handle:hover
-{
+.site-contacts-field-control a.site-contacts-handle:hover {
 	background-position: -144px -80px;
 }
 
-.site-contacts-field-options
-{
+.site-contacts-field-options {
 	margin: 10px 0px 0px 0px;
 	border: 1px solid #dddddd;
 	padding: 20px;
@@ -215,66 +180,55 @@ span.site-contacts-required
 .site-contacts-field-options input.site-contacts-input-tel,
 .site-contacts-field-options input.site-contacts-input-email,
 .site-contacts-field-options input.site-contacts-input-url,
-.site-contacts-field-options select.site-contacts-select
-{
+.site-contacts-field-options select.site-contacts-select {
 	width: 100%;
 	box-sizing: border-box;
 }
 
-.site-contacts-field-submit-button .site-contacts-field-options input.site-contacts-input-text
-{
+.site-contacts-field-submit-button .site-contacts-field-options input.site-contacts-input-text {
 	width: 200px;
 	max-width: 100%;
 }
 
 .site-contacts-field-prototype textarea.site-contacts-textarea,
-.site-contacts-field-options textarea.site-contacts-textarea
-{
+.site-contacts-field-options textarea.site-contacts-textarea {
 	width: 100%;
 	box-sizing: border-box;
 	min-height: 100px;
 }
 
-.site-contacts-option-label
-{
+.site-contacts-option-label {
 	font-weight: bold;
 	margin: 0px 0px 10px 0px;
 }
 
-.site-contacts-option-field
-{
+.site-contacts-option-field {
 	margin: 0px 0px 20px 0px;
 }
 
-.site-contacts-choose-fields
-{
+.site-contacts-choose-fields {
 	padding: 5px 0px;
 }
 
-.site-contacts-form-fields
-{
+.site-contacts-form-fields {
 	border-top: 1px solid #dddddd;
 	padding: 25px 0px;
 	margin: 0px;
 }
 
-.site-contacts-field-wrapper
-{
+.site-contacts-field-wrapper {
 	margin: 0px 0px 10px 0px;
 }
 
-.site-contacts-field-wrapper:last-child
-{
+.site-contacts-field-wrapper:last-child {
 	margin: 0px;
 }
 
-.site-contacts-field-container.ui-draggable-dragging
-{
+.site-contacts-field-container.ui-draggable-dragging {
 	min-width: 200px;
 }
 
-.site-contacts-field-template
-{
+.site-contacts-field-template {
 	font-size: 110%;
 	padding: 10px 20px;
 	border: 1px solid #d5d5d5;
@@ -286,24 +240,21 @@ span.site-contacts-required
 	background: linear-gradient(to bottom, #ffffff 0%,#f4f4f4 100%);
 }
 
-.site-contacts-field-template:hover
-{
+.site-contacts-field-template:hover {
 	background: #f4f4f4;
 	background: -moz-linear-gradient(top, #fafafa 0%, #e5e5e5 100%);
 	background: -webkit-linear-gradient(top, #fafafa 0%,#e5e5e5 100%);
 	background: linear-gradient(to bottom, #fafafa 0%,#e5e5e5 100%);
 }
 
-.site-contacts-bar
-{
+.site-contacts-bar {
 	float: right;
 	width: 30%;
 	padding: 0px;
 	margin: 0px;
 }
 
-input.site-contacts-title
-{
+input.site-contacts-title {
 	border-color: #CCC;
 	padding: 3px 8px;
 	line-height: 1.4em;
@@ -312,43 +263,36 @@ input.site-contacts-title
 	box-sizing: border-box;
 }
 
-.site-contacts-widget
-{
+.site-contacts-widget {
 	margin: 0px 25px 0px 0px;
 }
 
-ul.site-contacts-benefits
-{
+ul.site-contacts-benefits {
 	font-size: 110%;
 	padding: 10px 0px;
 	margin: 0px;
 }
 
-ul.site-contacts-benefits li
-{
+ul.site-contacts-benefits li {
 	margin: 0px 0px 10px 0px;
 }
 
-ul.site-contacts-benefits li:last-child
-{
+ul.site-contacts-benefits li:last-child {
 	margin: 0px;
 }
 
-.site-contacts-check
-{
+.site-contacts-check {
 	float: left;
 	font-size: 130%;
 	color: #33CC00;
 	font-weight: bold;
 }
 
-.site-contacts-single-benefit
-{
+.site-contacts-single-benefit {
 	margin: 0em 0em 0em 2em;
 }
 
-a.site-contacts-buy
-{
+a.site-contacts-buy {
 	border-radius: 6px;
 	border: 1px solid #FF6600;
 	background: #FF9900;
@@ -359,85 +303,72 @@ a.site-contacts-buy
 	display: inline-block;
 }
 
-a.site-contacts-buy:hover
-{
+a.site-contacts-buy:hover {
 	color: #ffffff;
 	font-weight: bold;
 	border: 1px solid #FF7711;
 	background: #FFAA11;
 }
 
-.site-contacts-content
-{
+.site-contacts-content {
 	float: left;
 	width: 70%;
 	padding: 0px;
 	margin: 0px;
 }
 
-table.site-contacts-table
-{
+table.site-contacts-table {
 	border: 2px solid #E0E0E0;
 	margin: 20px 0px 0px 0px;
 	width: 100%;
 	box-sizing: border-box;
 }
 
-table.site-contacts-table tr:nth-child(odd)
-{
+table.site-contacts-table tr:nth-child(odd) {
 	background-color: #F7F7FF;
 }
 
-table.site-contacts-table th
-{
+table.site-contacts-table th {
 	background: #E5E5E5;
 	text-align: center;
 	white-space: nowrap;
 }
 
 table.site-contacts-table th,
-table.site-contacts-table td
-{
+table.site-contacts-table td {
 	padding: 0.5em;
 }
 
 td.site-contacts-td-id,
-td.site-contacts-td-actions
-{
+td.site-contacts-td-actions {
 	text-align: center;
 	white-space: nowrap;
 }
 
-td.site-contacts-td-shortcode
-{
+td.site-contacts-td-shortcode {
 	min-width: 150px;
 	white-space: nowrap;
 }
 
-td.site-contacts-td-shortcode input
-{
+td.site-contacts-td-shortcode input {
 	max-width: 16em;
 }
 
-td.site-contacts-td-actions a
-{
+td.site-contacts-td-actions a {
 	margin: 0px 2px;
 }
 
-.site-contacts-main
-{
+.site-contacts-main {
 	margin: 0px;
 	padding: 0px;
 }
 
-.site-contacts-main input
-{
+.site-contacts-main input {
 	padding: 6px 8px;
 	max-width: 100%;
 }
 
-.site-contacts-text
-{
+.site-contacts-text {
 	padding: 5px 15px;
 	background: #FFFFFF;
 	margin: 0px 25px 25px 0px;
@@ -445,13 +376,11 @@ td.site-contacts-td-actions a
 	border: 2px solid #E0E0E0;
 }
 
-.site-contacts-text p
-{
+.site-contacts-text p {
 	margin: 1em 0em;
 }
 
-.site-contacts-header
-{
+.site-contacts-header {
 	text-align: left;
 	background: #ffffff;
 	padding: 10px 0px 10px 30px;
@@ -465,8 +394,7 @@ td.site-contacts-td-actions a
 	border-top: 2px solid #E0E0E0;
 }
 
-.site-contacts-info
-{
+.site-contacts-info {
 	padding: 10px 15px;
 	margin: 0px 0px 25px 0px;
 	border-left: 2px solid #E0E0E0;
@@ -477,16 +405,14 @@ td.site-contacts-td-actions a
 	background: #F6F6F6;
 }
 
-.site-contacts-info p
-{
+.site-contacts-info p {
 	margin: 0px;
 	padding: 10px 0px;
 }
 
 .site-contacts-main .site-contacts-button,
 input.site-contacts-button,
-button.site-contacts-button
-{
+button.site-contacts-button {
 	display: inline-block;
 	padding: 6px 20px;
 	line-height: 1.3em;
@@ -505,42 +431,35 @@ input.site-contacts-button:hover,
 button.site-contacts-button:hover,
 .site-contacts-main .site-contacts-button:focus,
 input.site-contacts-button:focus,
-button.site-contacts-button:focus
-{
+button.site-contacts-button:focus {
 	box-shadow: 1px 1px 4px 1px #efefef;
 	background: #fafafa;
 	background: linear-gradient(to bottom,  #fafafa 0%, #e2e2e2 100%);
 	color: #444444;
 }
 
-button.site-contacts-save
-{
+button.site-contacts-save {
 	margin-right: 10px;
 }
 
-select.site-contacts-select
-{
+select.site-contacts-select {
 	min-width: 150px;
 	max-width: 100%;
 }
 
-select.site-contacts-select.site-contacts-wide
-{
+select.site-contacts-select.site-contacts-wide {
 	width: 290px;
 }
 
-@media (max-width: 1199px)
-{
+@media (max-width: 1199px) {
 
-td.site-contacts-td-shortcode input
-{
+td.site-contacts-td-shortcode input {
 	max-width: 14em;
 }
 
 }
 
-@media (max-width: 1023px)
-{
+@media (max-width: 1023px) {
 
 table.site-contacts-table th,
 table.site-contacts-table td {
@@ -548,15 +467,13 @@ table.site-contacts-table td {
 }
 
 table.site-contacts-table th:nth-child(3),
-table.site-contacts-table td:nth-child(3)
-{
+table.site-contacts-table td:nth-child(3) {
 	display: none;
 }
 
 }
 
-@media (max-width: 782px)
-{
+@media (max-width: 782px) {
 
 table.site-contacts-table th,
 table.site-contacts-table td {
@@ -567,24 +484,20 @@ td.site-contacts-td-actions {
     white-space: normal;
 }
 
-td.site-contacts-td-shortcode input
-{
+td.site-contacts-td-shortcode input {
 	max-width: 13em;
 }
 
 }
 
-@media (max-width: 639px)
-{
+@media (max-width: 639px) {
 
-.site-contacts-content
-{
+.site-contacts-content {
 	float: none;
 	width: auto;
 }
 
-.site-contacts-bar
-{
+.site-contacts-bar {
 	margin: 30px 0px 0px 0px;
 	float: none;
 	width: auto;
@@ -605,11 +518,9 @@ td.site-contacts-td-shortcode input
 
 }
 
-@media (max-width: 479px)
-{
+@media (max-width: 479px) {
 
-td.site-contacts-td-shortcode input
-{
+td.site-contacts-td-shortcode input {
 	max-width: 12em;
 	padding-left: 2px;
 	padding-right: 2px;
@@ -618,12 +529,10 @@ td.site-contacts-td-shortcode input
 
 }
 
-@media (max-width: 359px)
-{
+@media (max-width: 359px) {
 
 table.site-contacts-table th:nth-child(2),
-table.site-contacts-table td:nth-child(2)
-{
+table.site-contacts-table td:nth-child(2) {
 	display: none;
 }
 
